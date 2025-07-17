@@ -16,6 +16,7 @@ import {
 
 interface Service {
   title: string;
+  slug: string;
   icon: LucideIcon;
   description: string;
 }
@@ -23,61 +24,73 @@ interface Service {
 export const services: Service[] = [
   {
     title: "AI Dashboard",
+    slug: "ai-dashboard",
     icon: BrainCircuit,
     description: "Intelligent, real-time data visualization and analytics platforms.",
   },
   {
     title: "Digital Marketing",
+    slug: "digital-marketing",
     icon: Megaphone,
     description: "Comprehensive strategies to boost your online presence and reach.",
   },
   {
     title: "Google Ads",
+    slug: "google-ads",
     icon: Target,
     description: "Targeted ad campaigns that deliver measurable results and ROI.",
   },
   {
     title: "SEO Optimization",
+    slug: "seo-optimization",
     icon: Search,
     description: "Enhancing your visibility on search engines to attract organic traffic.",
   },
   {
     title: "Logo & Branding",
+    slug: "logo-and-branding",
     icon: Palette,
     description: "Crafting unique brand identities that resonate with your audience.",
   },
   {
     title: "Affiliate Marketing",
+    slug: "affiliate-marketing",
     icon: Share2,
     description: "Building powerful affiliate networks to drive sales and partnerships.",
   },
   {
     title: "Data Analysis",
+    slug: "data-analysis",
     icon: BarChart3,
     description: "Uncovering actionable insights from your data to inform decisions.",
   },
   {
     title: "Social Media",
+    slug: "social-media",
     icon: Users,
     description: "Engaging content and community management across all platforms.",
   },
   {
     title: "3D Design & Animation",
+    slug: "3d-design-animation",
     icon: Cuboid,
     description: "Bringing your ideas to life with stunning 3D visuals and animations.",
   },
   {
     title: "Web Development",
+    slug: "web-development",
     icon: Code2,
     description: "Building fast, responsive, and secure websites for modern businesses.",
   },
   {
     title: "WhatsApp Chatbot",
+    slug: "whatsapp-chatbot",
     icon: Bot,
     description: "Automating customer interactions with intelligent WhatsApp chatbots.",
   },
   {
     title: "Brochure Creation",
+    slug: "brochure-creation",
     icon: FileText,
     description: "Designing professional and compelling marketing materials.",
   },
