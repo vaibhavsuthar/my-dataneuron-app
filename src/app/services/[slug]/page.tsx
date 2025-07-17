@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { generateServicePageContent, ServicePageContent } from '@/ai/flows/service-page-flow';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { generateAIDashboardPreview } from '@/ai/flows/ai-dashboard-preview';
 
 export default function ServicePage() {
   const params = useParams();
@@ -56,9 +57,11 @@ export default function ServicePage() {
     if (!service || !content) return;
     setIsGeneratingImage(true);
     try {
-        const result = await generateServicePageContent({ serviceTitle: service.title });
-        if (result.animationDataUri) {
-            setContent(prev => prev ? { ...prev, animationDataUri: result.animationDataUri } : result);
+        const result = await generateAIDashboardPreview({
+            prompt: `Generate a visually stunning, abstract 3D animation that conceptually represents '${service.title}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`
+        });
+        if (result.media) {
+            setContent(prev => prev ? { ...prev, animationDataUri: result.media } : { ...content, animationDataUri: result.media });
         }
     } catch (e) {
         console.error(e);
@@ -205,3 +208,5 @@ export default function ServicePage() {
     </div>
   );
 }
+
+    
