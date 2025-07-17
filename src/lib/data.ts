@@ -98,7 +98,7 @@ export const services: Service[] = [
 
 interface Project {
     title: string;
-    image: string;
+    image: string | null;
     hint: string;
     tags: string[];
     description: string;
@@ -110,7 +110,7 @@ export const projectTags = ["AI", "Marketing", "Design", "Web Dev"];
 export const projects: Project[] = [
     {
         title: "AI Analytics for E-commerce",
-        image: "https://placehold.co/600x400.png",
+        image: null,
         hint: "AI dashboard analytics",
         tags: ["AI", "Web Dev"],
         description: "A comprehensive AI platform for a major e-commerce client to track sales, predict trends, and analyze customer behavior in real-time.",
@@ -118,7 +118,7 @@ export const projects: Project[] = [
     },
     {
         title: "Global SEO Campaign",
-        image: "https://placehold.co/600x400.png",
+        image: null,
         hint: "SEO analytics chart",
         tags: ["Marketing"],
         description: "Executed a multi-lingual SEO strategy for a SaaS company, resulting in top-tier rankings across international markets.",
@@ -126,7 +126,7 @@ export const projects: Project[] = [
     },
     {
         title: "3D Product Animation",
-        image: "https://placehold.co/600x400.png",
+        image: null,
         hint: "3D product rendering",
         tags: ["Design"],
         description: "Created a series of high-fidelity 3D product animations for a tech hardware launch, used in marketing and promotional materials.",
@@ -134,7 +134,7 @@ export const projects: Project[] = [
     },
      {
         title: "Corporate Rebranding",
-        image: "https://placehold.co/600x400.png",
+        image: null,
         hint: "corporate branding design",
         tags: ["Design", "Marketing"],
         description: "Complete rebranding for a financial services firm, including a new logo, brand guidelines, and a suite of marketing collateral.",
@@ -142,7 +142,7 @@ export const projects: Project[] = [
     },
     {
         title: "Social Media Strategy",
-        image: "https://placehold.co/600x400.png",
+        image: null,
         hint: "social media dashboard",
         tags: ["Marketing"],
         description: "Developed and managed a viral social media campaign for a consumer brand, significantly increasing followers and engagement.",
@@ -150,7 +150,7 @@ export const projects: Project[] = [
     },
     {
         title: "Custom CRM Web App",
-        image: "https://placehold.co/600x400.png",
+        image: null,
         hint: "web application interface",
         tags: ["Web Dev", "AI"],
         description: "Built a bespoke CRM application with AI-powered lead scoring and automation features to streamline the sales pipeline.",

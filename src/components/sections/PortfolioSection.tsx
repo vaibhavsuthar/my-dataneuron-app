@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export function PortfolioSection() {
   const [activeFilter, setActiveFilter] = useState('All');
-  const [projectImages, setProjectImages] = useState<Record<string, string>>(
+  const [projectImages, setProjectImages] = useState<Record<string, string | null>>(
     projects.reduce((acc, p) => ({ ...acc, [p.title]: p.image }), {})
   );
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
@@ -83,14 +83,22 @@ export function PortfolioSection() {
                       <p className="mt-4 text-lg">Generating...</p>
                     </div>
                   ) : (
-                    <Image
-                      src={projectImages[project.title] || project.image}
-                      alt={project.title}
-                      data-ai-hint={project.hint}
-                      layout="fill"
-                      objectFit="cover"
-                      className="rounded-t-lg"
-                    />
+                    projectImages[project.title] ? (
+                        <Image
+                            src={projectImages[project.title]!}
+                            alt={project.title}
+                            data-ai-hint={project.hint}
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-t-lg"
+                        />
+                    ) : (
+                        <div className="flex items-center justify-center h-full bg-muted/50 p-4">
+                            <p className="text-center font-bold text-muted-foreground animate-pulse">
+                                ➡️ Experience AI in action — Press regenerate and let DataNeuron work its magic!
+                            </p>
+                        </div>
+                    )
                   )}
                 </div>
               </CardHeader>
