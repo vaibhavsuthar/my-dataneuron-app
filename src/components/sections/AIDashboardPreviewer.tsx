@@ -1,41 +1,26 @@
+
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import Image from 'next/image';
-import { Wand2, Loader2, AlertCircle } from 'lucide-react';
+import { Wand2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { generateAIDashboardPreview } from '@/ai/flows/ai-dashboard-preview';
 import { useToast } from '@/hooks/use-toast';
-
-const formSchema = z.object({
-  prompt: z.string().min(10, {
-    message: 'Please enter a prompt with at least 10 characters.',
-  }),
-});
 
 export function AIDashboardPreviewer() {
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      prompt: 'A futuristic AI dashboard for e-commerce analytics, showing sales trends and user behavior.',
-    },
-  });
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function handleGenerate() {
     setIsLoading(true);
     setImageUrl(null);
     try {
-      const result = await generateAIDashboardPreview(values);
+      const result = await generateAIDashboardPreview({ 
+        prompt: 'A futuristic AI dashboard for e-commerce analytics, showing sales trends and user behavior, with a resolution of 600x400.' 
+      });
       if (result && result.media) {
         setImageUrl(result.media);
       } else {
@@ -63,7 +48,7 @@ export function AIDashboardPreviewer() {
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl font-headline">AI Dashboard Previewer</h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Got an idea? Describe your desired dashboard, and our AI will generate a conceptual preview. Visualize your data solutions in seconds.
+            Click the button to let our AI generate a conceptual preview of a data dashboard. Visualize your data solutions in seconds.
           </p>
         </div>
 
@@ -74,38 +59,22 @@ export function AIDashboardPreviewer() {
                 <Wand2 className="text-primary" />
                 <span>Generate Your Preview</span>
               </CardTitle>
-              <CardDescription>Enter a prompt to create a dashboard concept.</CardDescription>
+              <CardDescription>Click the button to create a dashboard concept.</CardDescription>
             </CardHeader>
             <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="prompt"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input placeholder="e.g., A dashboard for social media engagement" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Generating...
-                      </>
-                    ) : (
-                      <>
-                        <Wand2 className="mr-2 h-4 w-4" />
-                        Generate Preview
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </Form>
+              <Button onClick={handleGenerate} className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="mr-2 h-4 w-4" />
+                    Generate Preview
+                  </>
+                )}
+              </Button>
             </CardContent>
           </Card>
 
