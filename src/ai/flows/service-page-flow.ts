@@ -46,19 +46,6 @@ const serviceContentPrompt = ai.definePrompt({
     3.  **marketValue**: Explain the importance and value of this service in today's market. Why is it essential for a modern business?
     4.  **whyUs**: Explain why DataNeuron Digital is the best choice for {{{serviceTitle}}}. Highlight unique strengths like our data-driven approach, expert team, or innovative technology.
   `,
-  config: {
-    responseModalities: ['TEXT'], // Only text is needed from this prompt
-  },
-});
-
-const imageGenerationPrompt = ai.definePrompt({
-    name: 'serviceImagePrompt',
-    input: { schema: z.object({ serviceTitle: z.string() })},
-    output: { schema: z.object({ animationDataUri: z.string() }) },
-    prompt: `Generate a visually stunning, abstract 3D animation that conceptually represents '{{{serviceTitle}}}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`,
-    config: {
-        responseModalities: ['IMAGE'],
-    }
 });
 
 const servicePageContentFlow = ai.defineFlow(
@@ -70,8 +57,14 @@ const servicePageContentFlow = ai.defineFlow(
   async (input) => {
     // Generate text and image in parallel
     const [contentResult, imageResult] = await Promise.all([
-        serviceContentPrompt(input),
-        imageGenerationPrompt(input)
+      serviceContentPrompt(input),
+      ai.generate({
+        model: 'googleai/gemini-2.0-flash-preview-image-generation',
+        prompt: `Generate a visually stunning, abstract 3D animation that conceptually represents '${input.serviceTitle}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`,
+        config: {
+          responseModalities: ['TEXT', 'IMAGE'],
+        },
+      }),
     ]);
     
     const { output } = contentResult;
