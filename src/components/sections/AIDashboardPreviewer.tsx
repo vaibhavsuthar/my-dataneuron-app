@@ -19,7 +19,7 @@ export function AIDashboardPreviewer() {
     setImageUrl(null);
     try {
       const result = await generateAIDashboardPreview({ 
-        prompt: 'A futuristic AI dashboard for e-commerce analytics, showing sales trends and user behavior, with a resolution of 600x400.' 
+        prompt: 'A futuristic AI dashboard for e-commerce analytics, showing sales trends and user behavior, with a resolution of 800x450.' 
       });
       if (result && result.media) {
         setImageUrl(result.media);
@@ -88,7 +88,7 @@ export function AIDashboardPreviewer() {
               )}
               {!isLoading && imageUrl && (
                 <div className="relative aspect-video w-full h-full rounded-lg overflow-hidden">
-                  <Image src={imageUrl} alt="AI generated dashboard preview" layout="fill" objectFit="contain" className="bg-muted" />
+                  <Image src={imageUrl} alt="AI generated dashboard preview" layout="fill" objectFit="cover" className="bg-muted" />
                 </div>
               )}
               {!isLoading && !imageUrl && (
