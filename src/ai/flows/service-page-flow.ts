@@ -55,12 +55,18 @@ const servicePageContentFlow = ai.defineFlow(
     outputSchema: ServicePageContentOutputSchema,
   },
   async (input) => {
+    let imagePrompt = `Generate a visually stunning, abstract 3D animation that conceptually represents '${input.serviceTitle}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`;
+    
+    if (input.serviceTitle.toLowerCase().includes('google ads')) {
+      imagePrompt = `Generate an abstract, artistic representation of the Google 'G' logo. The logo should be the central focus, reimagined with a creative, modern aesthetic. Use a vibrant and dynamic color palette, primarily featuring shades of blue and green. The background should be clean and minimalistic, making the logo pop. The style should be elegant and high-tech. Image resolution: 800x450.`
+    }
+
     // Generate text and image in parallel
     const [contentResult, imageResult] = await Promise.all([
       serviceContentPrompt(input),
       ai.generate({
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
-        prompt: `Generate a visually stunning, abstract 3D animation that conceptually represents '${input.serviceTitle}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`,
+        prompt: imagePrompt,
         config: {
           responseModalities: ['TEXT', 'IMAGE'],
         },

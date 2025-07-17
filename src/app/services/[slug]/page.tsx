@@ -56,9 +56,19 @@ export default function ServicePage() {
   const handleRegenerateImage = async () => {
     if (!service || !content) return;
     setIsGeneratingImage(true);
+
+    let imagePrompt = `Generate a visually stunning, abstract 3D animation that conceptually represents '${service.title}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`;
+
+    if (service.slug === 'google-ads') {
+        const colors = ["blue", "red", "yellow", "green", "purple", "orange"];
+        const randomColor1 = colors[Math.floor(Math.random() * colors.length)];
+        const randomColor2 = colors[Math.floor(Math.random() * colors.length)];
+        imagePrompt = `Generate an abstract, artistic representation of the Google 'G' logo. The logo should be the central focus, reimagined with a creative, modern aesthetic. Use a vibrant and dynamic color palette, primarily featuring shades of ${randomColor1} and ${randomColor2}. The background should be clean and minimalistic, making the logo pop. The style should be elegant and high-tech. Image resolution: 800x450.`
+    }
+
     try {
         const result = await generateAIDashboardPreview({
-            prompt: `Generate a visually stunning, abstract 3D animation that conceptually represents '${service.title}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`
+            prompt: imagePrompt
         });
         if (result.media) {
             setContent(prev => prev ? { ...prev, animationDataUri: result.media } : { ...content, animationDataUri: result.media });
@@ -208,5 +218,3 @@ export default function ServicePage() {
     </div>
   );
 }
-
-    
