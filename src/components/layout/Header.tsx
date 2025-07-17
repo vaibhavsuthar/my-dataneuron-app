@@ -33,7 +33,7 @@ export function Header() {
       href={link.href}
       className={cn(
         'transition-colors hover:text-primary',
-        (pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))) ? 'text-primary font-semibold' : 'text-muted-foreground'
+        (pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))) ? 'text-primary font-semibold' : isScrolled ? 'text-muted-foreground' : 'text-white/80 hover:text-white',
       )}
     >
       {link.name}
@@ -53,7 +53,9 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Button className="hidden md:flex">Let&apos;s Talk</Button>
+          <Button asChild className="hidden md:flex">
+             <Link href="#contact">Let&apos;s Talk</Link>
+          </Button>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="md:hidden">
