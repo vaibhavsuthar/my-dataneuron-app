@@ -36,7 +36,7 @@ const serviceContentPrompt = ai.definePrompt({
   input: { schema: ServicePageContentInputSchema },
   // Remove animationDataUri from the output schema of the text prompt
   output: { schema: ServicePageContentOutputSchema.omit({ animationDataUri: true }) },
-  model: 'googleai/gemini-2.0-flash',
+  model: 'googleai/gemini-pro',
   prompt: `
     You are an expert marketing copywriter and creative director for 'DataNeuron Digital', a cutting-edge digital agency.
     Your task is to generate compelling content for a web page dedicated to the following service: {{{serviceTitle}}}.
