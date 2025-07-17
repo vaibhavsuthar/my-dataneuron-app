@@ -7,7 +7,7 @@ import {
   Share2,
   BarChart3,
   Users,
-  Cube,
+  Cuboid,
   Code2,
   Bot,
   FileText,
@@ -63,7 +63,7 @@ export const services: Service[] = [
   },
   {
     title: "3D Design & Animation",
-    icon: Cube,
+    icon: Cuboid,
     description: "Bringing your ideas to life with stunning 3D visuals and animations.",
   },
   {
