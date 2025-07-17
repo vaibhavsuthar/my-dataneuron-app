@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Logo } from '../shared/Logo';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, ShieldAlert } from 'lucide-react';
 
 export function Footer() {
   const socialLinks = [
@@ -65,6 +65,10 @@ export function Footer() {
             <a href="tel:+917859958279" className="flex items-center gap-2 transition-colors hover:text-primary">
               <Phone className="h-5 w-5 shrink-0 text-primary" />
               <span>+91 - 7859958279</span>
+            </a>
+            <a href="mailto:ai@dataneuron.business" className="flex items-center gap-2 transition-colors hover:text-primary">
+                <ShieldAlert className="h-5 w-5 shrink-0 text-primary" />
+                <span>ai@dataneuron.business</span>
             </a>
           </address>
            <div className="mt-4">
