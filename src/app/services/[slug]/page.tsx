@@ -64,13 +64,13 @@ export default function ServicePage() {
         'digital-marketing': "Generate a Digital Marketing visual with email campaigns, social media ads, and PPC funnels. Resolution: 800x450.",
         'google-ads': `Generate an abstract, artistic representation of the Google 'G' logo. Use a vibrant and dynamic color palette. The background should be clean and minimalistic. Resolution: 800x450.`,
         'seo-optimization': "Generate an SEO Optimization visual with search rankings, analytics charts, and keyword tools. Resolution: 800x450.",
-        'logo-and-branding': "Generate a professional branding visual featuring one of these logos: DataNeuron, Tata, Tesla, Google, Meta, Instagram, Honda, Wow China. Resolution: 800x450.",
+        'logo-and-branding': "Generate an original, official-looking high-resolution logo of one of these global brands: Apple, Google, Microsoft, Amazon, Meta (Facebook), Tesla, Samsung, Coca-Cola, McDonald’s, Nike, Adidas, IBM, Intel, Netflix, Toyota, Mercedes-Benz, BMW, Pepsi, Sony, Huawei. Display the logo on a transparent or white background. Resolution: 800x450.",
         'affiliate-marketing': "Generate an Affiliate Marketing visual with referral links, commission charts, and partnership dashboards. Resolution: 800x450.",
         'data-analysis': "Generate a Data Analysis visual with charts, pie graphs, and snippets of Python/R code on a dashboard. Resolution: 800x450.",
         'social-media': "Generate a Social Media visual with Instagram/Facebook posts, like/share icons, and comment boxes. Resolution: 800x450.",
         '3d-design-animation': "Generate a realistic or animated 3D model of a modern house, a sleek car, or wireless earbuds with good lighting. Resolution: 800x450.",
         'web-development': "Generate a Website Homepage visual with UI/UX mockups and responsive screens. Resolution: 800x450.",
-        'whatsapp-chatbot': "Generate a WhatsApp Chatbot visual with a chat UI on a mobile device showing an automated conversation. Resolution: 800x450.",
+        'whatsapp-chatbot': "Generate a professional WhatsApp chatbot conversation. User: Hello, DataNeuron! Bot: Hi there! 👋 How can I assist you today? User: I'm interested in your Digital Marketing services. Bot: Great choice! 🚀 Could you please share your name, contact number, and email ID so we can get started? The chat should look like a real WhatsApp interface (green & white theme), clean and professional style. Resolution: 800x450.",
         'brochure-creation': "Generate a Brochure Design visual with a tri-fold layout or creative flyer mockup. Resolution: 800x450."
     };
 
