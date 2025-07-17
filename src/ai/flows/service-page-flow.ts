@@ -33,7 +33,8 @@ export async function generateServicePageContent(input: ServicePageContentInput)
 const serviceContentPrompt = ai.definePrompt({
   name: 'serviceContentPrompt',
   input: { schema: ServicePageContentInputSchema },
-  output: { schema: ServicePageContentOutputSchema },
+  // Remove animationDataUri from the output schema of the text prompt
+  output: { schema: ServicePageContentOutputSchema.omit({ animationDataUri: true }) },
   prompt: `
     You are an expert marketing copywriter and creative director for 'DataNeuron Digital', a cutting-edge digital agency.
     Your task is to generate compelling content for a web page dedicated to the following service: {{{serviceTitle}}}.
@@ -55,37 +56,43 @@ const servicePageContentFlow = ai.defineFlow(
     outputSchema: ServicePageContentOutputSchema,
   },
   async (input) => {
-    let imagePrompt = `Generate a visually stunning, abstract 3D animation that conceptually represents '${input.serviceTitle}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`;
-    
-    if (input.serviceTitle.toLowerCase().includes('google ads')) {
-      imagePrompt = `Generate an abstract, artistic representation of the Google 'G' logo. The logo should be the central focus, reimagined with a creative, modern aesthetic. Use a vibrant and dynamic color palette, primarily featuring shades of blue and green. The background should be clean and minimalistic, making the logo pop. The style should be elegant and high-tech. Image resolution: 800x450.`
-    }
+    // Generate text content first.
+    const contentResult = await serviceContentPrompt(input);
+    const { output: textContent } = contentResult;
 
-    // Generate text and image in parallel
-    const [contentResult, imageResult] = await Promise.all([
-      serviceContentPrompt(input),
-      ai.generate({
-        model: 'googleai/gemini-2.0-flash-preview-image-generation',
-        prompt: imagePrompt,
-        config: {
-          responseModalities: ['TEXT', 'IMAGE'],
-        },
-      }),
-    ]);
-    
-    const { output } = contentResult;
-    const { media } = imageResult;
-
-    if (!output) {
+    if (!textContent) {
       throw new Error('Failed to generate service content.');
     }
-    if (!media) {
-      throw new Error('Failed to generate service animation.');
+
+    let animationDataUri = "https://placehold.co/800x450.png"; // Default placeholder
+
+    try {
+        let imagePrompt = `Generate a visually stunning, abstract 3D animation that conceptually represents '${input.serviceTitle}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`;
+        
+        if (input.serviceTitle.toLowerCase().includes('google ads')) {
+          imagePrompt = `Generate an abstract, artistic representation of the Google 'G' logo. The logo should be the central focus, reimagined with a creative, modern aesthetic. Use a vibrant and dynamic color palette, primarily featuring shades of blue and green. The background should be clean and minimalistic, making the logo pop. The style should be elegant and high-tech. Image resolution: 800x450.`
+        }
+
+        const imageResult = await ai.generate({
+            model: 'googleai/gemini-2.0-flash-preview-image-generation',
+            prompt: imagePrompt,
+            config: {
+            responseModalities: ['TEXT', 'IMAGE'],
+            },
+        });
+
+        if (imageResult.media) {
+            animationDataUri = imageResult.media.url;
+        }
+    } catch (error) {
+        console.warn('Image generation failed, using placeholder.', error);
+        // If image generation fails, we'll just use the placeholder.
+        // The text content will still be returned.
     }
 
     return {
-        ...output,
-        animationDataUri: media.url,
+        ...textContent,
+        animationDataUri: animationDataUri,
     };
   }
 );
