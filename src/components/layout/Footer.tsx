@@ -90,8 +90,8 @@ export function Footer() {
         <div className="container mx-auto flex flex-col items-center justify-between px-4 py-6 text-sm text-muted-foreground sm:flex-row">
           <p>&copy; {new Date().getFullYear()} DataNeuron Digital. All rights reserved.</p>
           <div className="mt-4 flex space-x-4 sm:mt-0">
-            <Link href="#" className="transition-colors hover:text-primary">Privacy Policy</Link>
-            <Link href="#" className="transition-colors hover:text-primary">Terms of Service</Link>
+            <Link href="/privacy-policy" className="transition-colors hover:text-primary">Privacy Policy</Link>
+            <Link href="/terms-of-service" className="transition-colors hover:text-primary">Terms of Service</Link>
           </div>
         </div>
       </div>
