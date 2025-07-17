@@ -10,7 +10,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 
 const ServicePageContentInputSchema = z.object({
   serviceTitle: z.string().describe('The title of the service.'),
@@ -45,11 +45,20 @@ const serviceContentPrompt = ai.definePrompt({
     2.  **benefits**: List 3 to 5 key, tangible benefits a business would gain from this service.
     3.  **marketValue**: Explain the importance and value of this service in today's market. Why is it essential for a modern business?
     4.  **whyUs**: Explain why DataNeuron Digital is the best choice for {{{serviceTitle}}}. Highlight unique strengths like our data-driven approach, expert team, or innovative technology.
-    5.  **animationDataUri**: Generate a visually stunning, abstract 3D animation that conceptually represents '{{{serviceTitle}}}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.
   `,
   config: {
-    responseModalities: ['TEXT', 'IMAGE'],
+    responseModalities: ['TEXT'], // Only text is needed from this prompt
   },
+});
+
+const imageGenerationPrompt = ai.definePrompt({
+    name: 'serviceImagePrompt',
+    input: { schema: z.object({ serviceTitle: z.string() })},
+    output: { schema: z.object({ animationDataUri: z.string() }) },
+    prompt: `Generate a visually stunning, abstract 3D animation that conceptually represents '{{{serviceTitle}}}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`,
+    config: {
+        responseModalities: ['IMAGE'],
+    }
 });
 
 const servicePageContentFlow = ai.defineFlow(
@@ -59,11 +68,19 @@ const servicePageContentFlow = ai.defineFlow(
     outputSchema: ServicePageContentOutputSchema,
   },
   async (input) => {
-    const { output, media } = await serviceContentPrompt(input);
+    // Generate text and image in parallel
+    const [contentResult, imageResult] = await Promise.all([
+        serviceContentPrompt(input),
+        imageGenerationPrompt(input)
+    ]);
+    
+    const { output } = contentResult;
+    const { media } = imageResult;
+
     if (!output) {
       throw new Error('Failed to generate service content.');
     }
-     if (!media) {
+    if (!media) {
       throw new Error('Failed to generate service animation.');
     }
 
