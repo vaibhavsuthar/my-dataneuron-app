@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Mail, MessageSquare, Phone, User, Bot } from 'lucide-react';
 import Image from 'next/image';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters.'),
@@ -19,14 +20,27 @@ const formSchema = z.object({
 });
 
 export function ContactSection() {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { name: '', email: '', message: '' },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Handle form submission
+    const subject = encodeURIComponent(`Contact Form Submission from ${values.name}`);
+    const body = encodeURIComponent(
+      `Name: ${values.name}\nEmail: ${values.email}\n\nMessage:\n${values.message}`
+    );
+    const mailtoLink = `mailto:aidataneuronbusiness@gmail.com?subject=${subject}&body=${body}`;
+
+    window.location.href = mailtoLink;
+    
+    toast({
+        title: "Form Submitted!",
+        description: "Your email client has been opened to send the message.",
+    });
+
+    form.reset();
   }
 
   return (
