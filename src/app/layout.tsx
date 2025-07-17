@@ -22,14 +22,6 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body bg-background text-foreground antialiased">
-        <svg className="absolute -z-50 w-0 h-0">
-          <defs>
-            <filter id="water-ripple">
-              <feTurbulence type="fractalNoise" baseFrequency="0.02 0.1" numOctaves="1" result="turbulence" />
-              <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="15" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-          </defs>
-        </svg>
         <Header />
         <main>{children}</main>
         <Footer />

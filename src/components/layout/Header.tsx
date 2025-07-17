@@ -34,9 +34,7 @@ export function Header() {
       className={cn(
         'transition-colors font-medium',
         isScrolled ? 'text-foreground/80 hover:text-foreground' : 'text-primary-foreground/90 hover:text-primary-foreground',
-        pathname === link.href ? 'text-primary' : '',
-        !isScrolled && pathname === link.href ? 'text-primary-foreground font-semibold' : '',
-        isScrolled && pathname === link.href ? 'text-primary font-semibold' : 'text-muted-foreground'
+        pathname === link.href ? 'text-primary' : ''
       )}
     >
       {link.name}
@@ -46,9 +44,9 @@ export function Header() {
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full transition-all duration-300",
-      isScrolled ? "bg-background/80 border-b shadow-sm" : "bg-transparent water-ripple",
+      isScrolled ? "bg-background/80 shadow-sm border-b" : "bg-transparent",
     )}>
-      <div className={cn("absolute inset-0 transition-opacity", isScrolled ? "opacity-100" : "opacity-0 bg-background/80 backdrop-blur-sm")}></div>
+      <div className={cn("absolute inset-0 transition-opacity", isScrolled ? "bg-background/80 backdrop-blur-sm" : "opacity-0")}></div>
       <div className="container relative z-10 mx-auto flex h-20 items-center justify-between px-4">
         <Logo />
 
