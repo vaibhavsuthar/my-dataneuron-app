@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -5,11 +6,45 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { projects, projectTags } from '@/lib/data';
+import { Loader2, Wand2 } from 'lucide-react';
+import { generateAIDashboardPreview } from '@/ai/flows/ai-dashboard-preview';
+import { useToast } from '@/hooks/use-toast';
 
 export function PortfolioSection() {
   const [activeFilter, setActiveFilter] = useState('All');
+  const [projectImages, setProjectImages] = useState<Record<string, string>>(
+    projects.reduce((acc, p) => ({ ...acc, [p.title]: p.image }), {})
+  );
+  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
+  const { toast } = useToast();
+
+  const handleGenerateImage = async (title: string, hint: string) => {
+    setLoadingStates((prev) => ({ ...prev, [title]: true }));
+    try {
+      const result = await generateAIDashboardPreview({
+        prompt: `A professional portfolio image for a project about ${hint}, with a resolution of 600x400.`,
+      });
+      if (result && result.media) {
+        setProjectImages((prev) => ({ ...prev, [title]: result.media }));
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Generation Failed",
+          description: "Could not generate the image. Please try again.",
+        });
+      }
+    } catch (e) {
+      console.error(e);
+      toast({
+        variant: "destructive",
+        title: "An Error Occurred",
+        description: "Something went wrong. Please try again later.",
+      });
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [title]: false }));
+    }
+  };
 
   const filteredProjects = activeFilter === 'All'
     ? projects
@@ -38,29 +73,49 @@ export function PortfolioSection() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredProjects.map((project, index) => (
-            <Card key={index} className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 flex flex-col bg-card/80 backdrop-blur-sm">
-              <CardHeader>
+          {filteredProjects.map((project) => (
+            <Card key={project.title} className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 flex flex-col bg-card/80 backdrop-blur-sm">
+              <CardHeader className='p-0'>
                 <div className="relative h-56 w-full">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    data-ai-hint={project.hint}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-t-lg"
-                  />
+                  {loadingStates[project.title] ? (
+                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50">
+                      <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                      <p className="mt-4 text-lg">Generating...</p>
+                    </div>
+                  ) : (
+                    <Image
+                      src={projectImages[project.title] || project.image}
+                      alt={project.title}
+                      data-ai-hint={project.hint}
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-t-lg"
+                    />
+                  )}
                 </div>
               </CardHeader>
-              <CardContent className="flex-grow">
+              <CardContent className="flex-grow p-6">
                 <CardTitle className="mb-2 text-xl">{project.title}</CardTitle>
                 <div className="mb-4 flex flex-wrap gap-2">
                   {project.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
                 </div>
                 <p className="text-muted-foreground">{project.description}</p>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="flex-col items-start gap-4">
                  <p className="font-semibold text-primary">{project.results}</p>
+                 <Button 
+                    onClick={() => handleGenerateImage(project.title, project.hint)} 
+                    disabled={loadingStates[project.title]}
+                    variant="outline"
+                    className="w-full"
+                 >
+                    {loadingStates[project.title] ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                        <Wand2 className="mr-2 h-4 w-4" />
+                    )}
+                    Regenerate Image
+                 </Button>
               </CardFooter>
             </Card>
           ))}
