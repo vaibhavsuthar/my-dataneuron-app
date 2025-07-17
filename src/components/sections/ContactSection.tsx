@@ -111,7 +111,17 @@ export function ContactSection() {
               </CardContent>
             </Card>
             <div className="relative h-80 w-full overflow-hidden rounded-lg">
-                <Image src="https://placehold.co/600x400.png" data-ai-hint="office map" alt="Office Location" layout="fill" objectFit="cover" />
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                    poster="https://placehold.co/600x400.png"
+                >
+                    <source src="/contact-video.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
             </div>
           </div>
         </div>
