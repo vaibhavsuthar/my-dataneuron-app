@@ -32,8 +32,11 @@ export function Header() {
       key={link.name}
       href={link.href}
       className={cn(
-        'transition-colors hover:text-primary',
-        (pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))) ? 'text-primary font-semibold' : isScrolled ? 'text-muted-foreground' : 'text-white/80 hover:text-white',
+        'transition-colors font-medium',
+        isScrolled ? 'text-foreground/80 hover:text-foreground' : 'text-primary-foreground/90 hover:text-primary-foreground',
+        pathname === link.href ? 'text-primary' : '',
+        !isScrolled && pathname === link.href ? 'text-primary-foreground font-semibold' : '',
+        isScrolled && pathname === link.href ? 'text-primary font-semibold' : 'text-muted-foreground'
       )}
     >
       {link.name}
@@ -43,9 +46,10 @@ export function Header() {
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full transition-all duration-300",
-      isScrolled ? "bg-background/80 backdrop-blur-lg border-b" : "bg-transparent"
+      isScrolled ? "bg-background/80 border-b shadow-sm" : "bg-transparent water-ripple",
     )}>
-      <div className="container mx-auto flex h-20 items-center justify-between px-4">
+      <div className={cn("absolute inset-0 transition-opacity", isScrolled ? "opacity-100" : "opacity-0 bg-background/80 backdrop-blur-sm")}></div>
+      <div className="container relative z-10 mx-auto flex h-20 items-center justify-between px-4">
         <Logo />
 
         <nav className="hidden items-center space-x-6 text-lg font-medium md:flex">
@@ -66,9 +70,18 @@ export function Header() {
             <SheetContent side="right">
               <div className="flex h-full flex-col justify-between">
                 <div className="flex flex-col items-center space-y-6 pt-12 text-xl">
-                  {navItems}
+                  {navItems.map((navItem) => (
+                    <div key={navItem.key} onClick={() => {
+                        const trigger = document.querySelector('[data-radix-collection-item] > button');
+                        if (trigger) (trigger as HTMLElement).click();
+                    }}>
+                        {navItem}
+                    </div>
+                  ))}
                 </div>
-                <Button className="w-full">Let&apos;s Talk</Button>
+                 <Button asChild className="w-full">
+                    <Link href="#contact">Let&apos;s Talk</Link>
+                 </Button>
               </div>
             </SheetContent>
           </Sheet>
