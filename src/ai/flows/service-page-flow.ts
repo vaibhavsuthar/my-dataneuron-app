@@ -12,6 +12,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import { services } from '@/lib/data';
+import { googleAI } from '@genkit-ai/googleai';
 
 const ServicePageContentInputSchema = z.object({
   serviceTitle: z.string().describe('The title of the service.'),
@@ -36,7 +37,7 @@ const serviceContentPrompt = ai.definePrompt({
   input: { schema: ServicePageContentInputSchema },
   // Remove animationDataUri from the output schema of the text prompt
   output: { schema: ServicePageContentOutputSchema.omit({ animationDataUri: true }) },
-  model: 'googleai/gemini-pro',
+  model: googleAI.model('gemini-pro'),
   prompt: `
     You are an expert marketing copywriter and creative director for 'DataNeuron Digital', a cutting-edge digital agency.
     Your task is to generate compelling content for a web page dedicated to the following service: {{{serviceTitle}}}.
