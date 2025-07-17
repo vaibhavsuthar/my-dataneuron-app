@@ -33,7 +33,7 @@ export function Header() {
       href={link.href}
       className={cn(
         'transition-colors font-medium',
-        isScrolled ? 'text-foreground/80 hover:text-primary' : 'text-white hover:text-white/80',
+        isScrolled ? 'text-foreground/80 hover:text-primary' : 'text-black hover:text-black/80',
         pathname === link.href && isScrolled ? 'text-primary' : ''
       )}
     >
@@ -62,7 +62,7 @@ export function Header() {
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className={cn(
                   "md:hidden",
-                  isScrolled ? "bg-card text-foreground" : "bg-transparent border-white/50 text-white hover:bg-white/10 hover:text-white"
+                  isScrolled ? "bg-card text-foreground" : "bg-transparent border-black/50 text-black hover:bg-black/10 hover:text-black"
               )}>
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle navigation menu</span>
