@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -6,15 +5,18 @@ export function HeroSection() {
   return (
     <section className="relative h-[80vh] min-h-[600px] w-full flex items-center justify-center text-center text-white overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <Image
-          src="https://placehold.co/1920x1080.png"
-          alt="Futuristic AI brain background"
-          data-ai-hint="futuristic AI brain network"
-          layout="fill"
-          objectFit="cover"
-          className="opacity-40"
-          priority
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover opacity-40"
+          poster="https://placehold.co/1920x1080.png" 
+        >
+          {/* Make sure to add your video file to the /public folder */}
+          <source src="/hero-video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent"></div>
         <div className="absolute inset-0 bg-black/50"></div>
       </div>
