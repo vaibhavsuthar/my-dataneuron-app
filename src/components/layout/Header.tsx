@@ -46,7 +46,7 @@ export function Header() {
       "sticky top-0 z-50 w-full transition-all duration-300",
       isScrolled ? "shadow-sm border-b" : "border-b-transparent",
     )}>
-      <div className={cn("absolute inset-0 transition-opacity", isScrolled ? "bg-background/80 backdrop-blur-sm" : "opacity-0")}></div>
+      <div className={cn("absolute inset-0 transition-opacity", isScrolled ? "bg-background/80 backdrop-blur-sm" : "bg-transparent")}></div>
       <div className="container relative z-10 mx-auto flex h-20 items-center justify-between px-4">
         <Logo />
 
@@ -60,7 +60,10 @@ export function Header() {
           </Button>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="md:hidden bg-transparent border-white/50 text-white hover:bg-white/10 hover:text-white">
+              <Button variant="outline" size="icon" className={cn(
+                  "md:hidden",
+                  isScrolled ? "bg-card text-foreground" : "bg-transparent border-white/50 text-white hover:bg-white/10 hover:text-white"
+              )}>
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
@@ -68,13 +71,18 @@ export function Header() {
             <SheetContent side="right">
               <div className="flex h-full flex-col justify-between">
                 <div className="flex flex-col items-center space-y-6 pt-12 text-xl">
-                  {navItems.map((navItem) => (
-                    <div key={navItem.key} onClick={() => {
-                        const trigger = document.querySelector('[data-radix-collection-item] > button');
-                        if (trigger) (trigger as HTMLElement).click();
-                    }}>
-                        {navItem}
-                    </div>
+                  {navLinks.map((link) => (
+                    <Link
+                        key={link.name}
+                        href={link.href}
+                        className='transition-colors font-medium text-foreground/80 hover:text-primary'
+                        onClick={() => {
+                            const trigger = document.querySelector('[data-radix-collection-item] > button');
+                            if (trigger) (trigger as HTMLElement).click();
+                        }}
+                    >
+                        {link.name}
+                    </Link>
                   ))}
                 </div>
                  <Button asChild className="w-full">
