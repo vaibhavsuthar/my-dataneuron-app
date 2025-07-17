@@ -11,6 +11,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
+import { services } from '@/lib/data';
 
 const ServicePageContentInputSchema = z.object({
   serviceTitle: z.string().describe('The title of the service.'),
@@ -65,12 +66,29 @@ const servicePageContentFlow = ai.defineFlow(
     }
 
     let animationDataUri = "https://placehold.co/800x450.png"; // Default placeholder
+    const service = services.find(s => s.title === input.serviceTitle);
+    const slug = service?.slug || '';
 
     try {
         let imagePrompt = `Generate a visually stunning, abstract 3D animation that conceptually represents '${input.serviceTitle}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`;
         
-        if (input.serviceTitle.toLowerCase().includes('google ads')) {
-          imagePrompt = `Generate an abstract, artistic representation of the Google 'G' logo. The logo should be the central focus, reimagined with a creative, modern aesthetic. Use a vibrant and dynamic color palette, primarily featuring shades of blue and green. The background should be clean and minimalistic, making the logo pop. The style should be elegant and high-tech. Image resolution: 800x450.`
+        const prompts: Record<string, string> = {
+            'ai-dashboard': "Generate an AI Dashboard visual with charts, neural networks, predictive analytics, and data panels. Resolution: 800x450.",
+            'digital-marketing': "Generate a Digital Marketing visual with email campaigns, social media ads, and PPC funnels. Resolution: 800x450.",
+            'google-ads': `Generate an abstract, artistic representation of the Google 'G' logo. Use a vibrant and dynamic color palette. The background should be clean and minimalistic. Resolution: 800x450.`,
+            'seo-optimization': "Generate an SEO Optimization visual with search rankings, analytics charts, and keyword tools. Resolution: 800x450.",
+            'logo-and-branding': "Generate a professional branding visual featuring one of these logos: DataNeuron, Tata, Tesla, Google, Meta, Instagram, Honda, Wow China. Resolution: 800x450.",
+            'affiliate-marketing': "Generate an Affiliate Marketing visual with referral links, commission charts, and partnership dashboards. Resolution: 800x450.",
+            'data-analysis': "Generate a Data Analysis visual with charts, pie graphs, and snippets of Python/R code on a dashboard. Resolution: 800x450.",
+            'social-media': "Generate a Social Media visual with Instagram/Facebook posts, like/share icons, and comment boxes. Resolution: 800x450.",
+            '3d-design-animation': "Generate a realistic or animated 3D model of a modern house, a sleek car, or wireless earbuds with good lighting. Resolution: 800x450.",
+            'web-development': "Generate a Website Homepage visual with UI/UX mockups and responsive screens. Resolution: 800x450.",
+            'whatsapp-chatbot': "Generate a WhatsApp Chatbot visual with a chat UI on a mobile device showing an automated conversation. Resolution: 800x450.",
+            'brochure-creation': "Generate a Brochure Design visual with a tri-fold layout or creative flyer mockup. Resolution: 800x450."
+        };
+
+        if (prompts[slug]) {
+          imagePrompt = prompts[slug];
         }
 
         const imageResult = await ai.generate({
