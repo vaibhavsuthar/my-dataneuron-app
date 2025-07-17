@@ -9,7 +9,7 @@ export function Footer() {
     { name: 'Facebook', icon: Facebook, href: '#' },
     { name: 'LinkedIn', icon: Linkedin, href: '#' },
     { name: 'Twitter', icon: Twitter, href: '#' },
-    { name: 'Instagram', icon: Instagram, href: '#' },
+    { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/dataneuron.business?igsh=N2FweHNxbXVpYmE2&utm_source=qr' },
   ];
 
   const quickLinks = [
@@ -30,7 +30,7 @@ export function Footer() {
           <div className="flex space-x-2">
             {socialLinks.map((link) => (
               <Button key={link.name} variant="ghost" size="icon" asChild>
-                <Link href={link.href} aria-label={link.name}>
+                <Link href={link.href} aria-label={link.name} target="_blank" rel="noopener noreferrer">
                   <link.icon className="h-5 w-5" />
                 </Link>
               </Button>
