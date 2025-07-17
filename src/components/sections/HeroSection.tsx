@@ -10,7 +10,7 @@ export function HeroSection() {
           loop
           muted
           playsInline
-          className="w-full h-full object-cover opacity-40"
+          className="w-full h-full object-cover"
           poster="https://placehold.co/1920x1080.png" 
         >
           {/* Make sure to add your video file to the /public folder */}
@@ -18,7 +18,7 @@ export function HeroSection() {
           Your browser does not support the video tag.
         </video>
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent"></div>
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-black/40"></div>
       </div>
       <div className="relative z-10 flex flex-col items-center px-4">
         <div className="mb-4 inline-block rounded-full bg-primary/20 px-4 py-2 text-sm font-semibold text-primary-foreground border border-primary/30 backdrop-blur-sm">
