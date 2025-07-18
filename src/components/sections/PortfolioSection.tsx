@@ -23,7 +23,7 @@ export function PortfolioSection() {
     setLoadingStates((prev) => ({ ...prev, [title]: true }));
     try {
       const result = await generateAIDashboardPreview({
-        prompt: `A professional portfolio image for a project about ${hint}, with a resolution of 600x400.`,
+        prompt: `A professional portfolio image for a project about ${hint}, with a resolution of 800x450.`,
       });
       if (result && result.media) {
         setProjectImages((prev) => ({ ...prev, [title]: result.media }));
@@ -76,7 +76,7 @@ export function PortfolioSection() {
           {filteredProjects.map((project) => (
             <Card key={project.title} className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 flex flex-col bg-card/80 backdrop-blur-sm">
               <CardHeader className='p-0'>
-                <div className="relative h-56 w-full">
+                <div className="relative aspect-[800/450] w-full">
                   {loadingStates[project.title] ? (
                     <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50">
                       <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -93,8 +93,8 @@ export function PortfolioSection() {
                             className="rounded-t-lg"
                         />
                     ) : (
-                        <div className="flex items-center justify-center h-full bg-muted/50 p-4">
-                            <p className="text-center font-bold text-muted-foreground animate-pulse">
+                        <div className="flex items-center justify-center h-full bg-muted/50 p-4 rounded-t-lg">
+                            <p className="text-center font-bold text-muted-foreground">
                                 ➡️ Experience AI in action — Press regenerate and let DataNeuron work its magic!
                             </p>
                         </div>
@@ -109,7 +109,7 @@ export function PortfolioSection() {
                 </div>
                 <p className="text-muted-foreground">{project.description}</p>
               </CardContent>
-              <CardFooter className="flex-col items-start gap-4">
+              <CardFooter className="flex-col items-start gap-4 p-6 pt-0">
                  <p className="font-semibold text-primary">{project.results}</p>
                  <Button 
                     onClick={() => handleGenerateImage(project.title, project.hint)} 
