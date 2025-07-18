@@ -134,13 +134,7 @@ export default function ServicePage() {
           <div className="space-y-6">
             <Card className="aspect-video w-full">
                 <CardContent className="p-2 h-full">
-                {isLoading || isGeneratingImage ? (
-                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg p-4 text-center">
-                        <p className="text-lg font-semibold mb-2">🔹 "Experience AI in action"</p>
-                        <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
-                        <p className="font-bold">➡️ "Experience AI in action — Press regenerate and let DataNeuron work its magic!"</p>
-                    </div>
-                ) : service.slug === 'video-editing' ? (
+                {service.slug === 'video-editing' ? (
                      <div className="relative w-full h-full rounded-lg overflow-hidden">
                         <video
                             autoPlay
@@ -153,6 +147,12 @@ export default function ServicePage() {
                             <source src="/video-editing-service.mp4" type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
+                    </div>
+                ) : isLoading || isGeneratingImage ? (
+                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg p-4 text-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+                        <p className="text-lg font-semibold mb-2">🔹 "Experience AI in action"</p>
+                        <p className="font-bold">➡️ "Experience AI in action — Press regenerate and let DataNeuron work its magic!"</p>
                     </div>
                 ) : (
                     content?.animationDataUri && (
@@ -178,7 +178,7 @@ export default function ServicePage() {
                 <Card>
                     <CardHeader>
                         <CardTitle>Core Benefits</CardTitle>
-                    </CardHeader>
+                    </Header>
                     <CardContent className="space-y-4">
                         {isLoading ? (
                             Array.from({length: 3}).map((_, i) => (
