@@ -134,10 +134,24 @@ export default function ServicePage() {
           <div className="space-y-6">
             <Card className="aspect-video w-full">
                 <CardContent className="p-2 h-full">
-                {isLoading || isGeneratingImage ? (
+                {isLoading || (isGeneratingImage && service.slug !== 'video-editing') ? (
                     <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg">
                         <Loader2 className="h-12 w-12 animate-spin text-primary" />
                         <p className="mt-4 text-lg">AI is crafting your animation...</p>
+                    </div>
+                ) : service.slug === 'video-editing' ? (
+                     <div className="relative w-full h-full rounded-lg overflow-hidden">
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover"
+                            poster="https://placehold.co/800x450"
+                        >
+                            <source src="/video-editing-service.mp4" type="video/mp4" />
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                 ) : (
                     content?.animationDataUri && (
@@ -148,10 +162,12 @@ export default function ServicePage() {
                 )}
                 </CardContent>
             </Card>
-            <Button onClick={handleRegenerateImage} disabled={isGeneratingImage || isLoading} className="w-full">
-                {isGeneratingImage ? <Loader2 className="mr-2 animate-spin" /> : <Wand2 className="mr-2" />}
-                Regenerate Animation
-            </Button>
+             {service.slug !== 'video-editing' && (
+                <Button onClick={handleRegenerateImage} disabled={isGeneratingImage || isLoading} className="w-full">
+                    {isGeneratingImage ? <Loader2 className="mr-2 animate-spin" /> : <Wand2 className="mr-2" />}
+                    Regenerate Animation
+                </Button>
+            )}
           </div>
         </div>
 
