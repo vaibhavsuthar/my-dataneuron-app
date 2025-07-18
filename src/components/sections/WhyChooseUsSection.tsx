@@ -34,9 +34,9 @@ const CountUpNumber = ({ to, duration = 2000 }: { to: number, duration?: number 
 
 export function WhyChooseUsSection() {
   const stats = [
-    { number: 50, label: 'Projects Completed' },
+    { number: 25, label: 'Projects Completed' },
     { number: 98, label: 'Client Satisfaction', suffix: '%' },
-    { number: 20, label: 'Expert Team Members' },
+    { number: 15, label: 'Expert Team Members' },
     { number: 400, label: 'Engagement Boost', suffix: '%' },
   ];
 
