@@ -24,7 +24,7 @@ export function Footer() {
   });
 
   const socialLinks = [
-    { name: 'Facebook', icon: Facebook, href: '#' },
+    { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/profile.php?id=61578209136291' },
     { name: 'LinkedIn', icon: Linkedin, href: '#' },
     { name: 'Twitter', icon: Twitter, href: '#' },
     { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/dataneuron.business?igsh=N2FweHNxbXVpYmE2&utm_source=qr' },
