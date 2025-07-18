@@ -1,10 +1,10 @@
+
 'use client';
 
-import { CheckCircle, Award, Users, LifeBuoy } from 'lucide-react';
+import { Award, Users, LifeBuoy } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEffect, useState, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
-import Image from 'next/image';
 
 const CountUpNumber = ({ to, duration = 2000 }: { to: number, duration?: number }) => {
   const [count, setCount] = useState(0);
@@ -60,8 +60,19 @@ export function WhyChooseUsSection() {
 
   return (
     <section id="why-us" className="relative w-full py-16 sm:py-24 bg-secondary/50 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-10 dark:opacity-5">
-            <Image src="https://placehold.co/1920x1080.png" data-ai-hint="abstract data nodes" layout="fill" objectFit="cover" alt="Abstract background"/>
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+            poster="https://placehold.co/1920x1080.png"
+          >
+            <source src="/why-us-video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="absolute inset-0 bg-secondary/80"></div>
         </div>
         <div className="container relative z-10 mx-auto px-4">
         <div className="mx-auto max-w-3xl text-center">
