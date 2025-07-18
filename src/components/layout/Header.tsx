@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { Button } from '../ui/button';
@@ -41,6 +42,8 @@ export function Header() {
     </Link>
   ));
 
+  const whatsappLink = "https://wa.me/917859958279";
+
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full transition-all duration-300",
@@ -56,7 +59,7 @@ export function Header() {
 
         <div className="flex items-center gap-4">
           <Button asChild className="hidden md:flex">
-             <Link href="#contact">Let&apos;s Talk</Link>
+             <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">Let&apos;s Talk</Link>
           </Button>
           <Sheet>
             <SheetTrigger asChild>
@@ -86,7 +89,7 @@ export function Header() {
                   ))}
                 </div>
                  <Button asChild className="w-full">
-                    <Link href="#contact">Let&apos;s Talk</Link>
+                    <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">Let&apos;s Talk</Link>
                  </Button>
               </div>
             </SheetContent>
