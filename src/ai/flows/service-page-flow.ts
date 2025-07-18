@@ -86,7 +86,7 @@ async function generateImageForService(serviceTitle: string): Promise<string> {
         }
     } catch (error) {
         console.warn('Image generation failed, using placeholder.', error);
-        // If image generation fails, we'll just use the placeholder.
+        // If image generation fails (e.g., rate limit, error), we'll just use the placeholder.
     }
     
     return animationDataUri;
