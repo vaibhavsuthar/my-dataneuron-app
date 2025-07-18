@@ -134,7 +134,7 @@ export default function ServicePage() {
           <div className="space-y-6">
             <Card className="aspect-video w-full">
                 <CardContent className="p-2 h-full">
-                {isLoading || (isGeneratingImage && service.slug !== 'video-editing') ? (
+                {isLoading || isGeneratingImage ? (
                     <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg">
                         <Loader2 className="h-12 w-12 animate-spin text-primary" />
                         <p className="mt-4 text-lg">AI is crafting your animation...</p>
@@ -199,7 +199,7 @@ export default function ServicePage() {
                 <Card>
                     <CardHeader>
                         <CardTitle>Market Insights</CardTitle>
-                    </CardHeader>
+                    </Header>
                     <CardContent>
                         {isLoading ? (
                             <div className="space-y-4">
