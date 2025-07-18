@@ -9,10 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Loader2, Wand2, CheckCircle } from 'lucide-react';
 import { services } from '@/lib/data';
 import Link from 'next/link';
-import { generateServicePageContent, ServicePageContent } from '@/ai/flows/service-page-flow';
+import { generateServicePageContent, ServicePageContent, regenerateServiceImage } from '@/ai/flows/service-page-flow';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
-import { generateAIDashboardPreview } from '@/ai/flows/ai-dashboard-preview';
 
 export default function ServicePage() {
   const params = useParams();
@@ -54,36 +53,16 @@ export default function ServicePage() {
   };
 
   const handleRegenerateImage = async () => {
-    if (!service || !content) return;
+    if (!service) return;
     setIsGeneratingImage(true);
 
-    let imagePrompt = `Generate a visually stunning, abstract 3D animation that conceptually represents '${service.title}'. The image should be dynamic, with a sense of energy and sophistication. It should have a resolution of 800x450.`;
-    
-    const prompts: Record<string, string> = {
-        'ai-dashboard': "Generate an AI Dashboard visual with charts, neural networks, predictive analytics, and data panels. Resolution: 800x450.",
-        'digital-marketing': "Generate a Digital Marketing visual with email campaigns, social media ads, and PPC funnels. Resolution: 800x450.",
-        'google-ads': `Generate an abstract, artistic representation of the Google 'G' logo. Use a vibrant and dynamic color palette. The background should be clean and minimalistic. Resolution: 800x450.`,
-        'seo-optimization': "Generate an SEO Optimization visual with search rankings, analytics charts, and keyword tools. Resolution: 800x450.",
-        'logo-and-branding': "Generate an original, official-looking high-resolution logo of one of these global brands: Apple, Google, Microsoft, Amazon, Meta (Facebook), Tesla, Samsung, Coca-Cola, McDonald’s, Nike, Adidas, IBM, Intel, Netflix, Toyota, Mercedes-Benz, BMW, Pepsi, Sony, Huawei. Display the logo on a transparent or white background. Resolution: 800x450.",
-        'affiliate-marketing': "Generate an Affiliate Marketing visual with referral links, commission charts, and partnership dashboards. Resolution: 800x450.",
-        'data-analysis': "Generate a Data Analysis visual with charts, pie graphs, and snippets of Python/R code on a dashboard. Resolution: 800x450.",
-        'social-media': "Generate a Social Media visual with Instagram/Facebook posts, like/share icons, and comment boxes. Resolution: 800x450.",
-        '3d-design-animation': "Generate a realistic or animated 3D model of a modern house, a sleek car, or wireless earbuds with good lighting. Resolution: 800x450.",
-        'web-development': "Generate a Website Homepage visual with UI/UX mockups and responsive screens. Resolution: 800x450.",
-        'whatsapp-chatbot': "Generate a professional WhatsApp chatbot conversation. User: Hello, DataNeuron! Bot: Hi there! 👋 How can I assist you today? User: I'm interested in your Digital Marketing services. Bot: Great choice! 🚀 Could you please share your name, contact number, and email ID so we can get started? The chat should look like a real WhatsApp interface (green & white theme), clean and professional style. Resolution: 800x450.",
-        'brochure-creation': "Generate a Brochure Design visual with a tri-fold layout or creative flyer mockup. Resolution: 800x450."
-    };
-
-    if (prompts[service.slug]) {
-        imagePrompt = prompts[service.slug];
-    }
-
     try {
-        const result = await generateAIDashboardPreview({
-            prompt: imagePrompt
-        });
-        if (result.media) {
-            setContent(prev => prev ? { ...prev, animationDataUri: result.media } : { ...content, animationDataUri: result.media });
+        const result = await regenerateServiceImage({ serviceTitle: service.title });
+        if (result.animationDataUri) {
+            setContent(prev => {
+                if (!prev) return null; // Should not happen if button is clicked
+                return { ...prev, animationDataUri: result.animationDataUri };
+            });
         }
     } catch (e) {
         console.error(e);
