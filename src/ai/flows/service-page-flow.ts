@@ -120,11 +120,28 @@ const servicePageContentFlow = ai.defineFlow(
     outputSchema: ServicePageContentOutputSchema,
   },
   async (input) => {
-    const contentResult = await serviceContentPrompt(input);
-    const { output: textContent } = contentResult;
+    let textContent: Omit<ServicePageContent, 'animationDataUri'>;
 
-    if (!textContent) {
-      throw new Error('Failed to generate service content.');
+    try {
+      const contentResult = await serviceContentPrompt(input);
+      textContent = contentResult.output!;
+      if (!textContent) {
+          throw new Error('AI returned empty content.');
+      }
+    } catch (error) {
+        console.warn('AI content generation failed, using fallback data.', error);
+        // Fallback content if the AI fails
+        textContent = {
+            introduction: `Discover the power of our ${input.serviceTitle} service. We offer tailored solutions to help your business thrive in the digital landscape.`,
+            benefits: [
+                'Boost your brand visibility and reach.',
+                'Drive targeted traffic and increase conversions.',
+                'Gain a competitive edge with data-driven strategies.',
+                'Receive dedicated support from our team of experts.',
+            ],
+            marketValue: `In today's competitive market, a strong digital presence is crucial. Our ${input.serviceTitle} service provides the essential tools and expertise to ensure your business not only competes but excels.`,
+            whyUs: 'At DataNeuron Digital, we combine innovative technology with a client-centric approach. Our team is dedicated to understanding your unique goals and delivering measurable results that drive growth.',
+        };
     }
 
     const animationDataUri = await generateImageForService(input.serviceTitle);
