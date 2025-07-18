@@ -32,6 +32,7 @@ export default function ServicePage() {
 
   if (!service) {
     notFound();
+    return null; // or a loading component, but notFound will stop rendering
   }
   
   const generateContent = async () => {
@@ -150,7 +151,7 @@ export default function ServicePage() {
                     </div>
                 ) : isLoading || isGeneratingImage ? (
                     <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg p-4 text-center">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+                        {isGeneratingImage || isLoading ? <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" /> : null}
                         <p className="text-lg font-semibold mb-2">🔹 "Experience AI in action"</p>
                         <p className="font-bold">➡️ "Experience AI in action — Press regenerate and let DataNeuron work its magic!"</p>
                     </div>
