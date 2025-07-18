@@ -29,11 +29,6 @@ export default function ServicePage() {
       generateContent();
     }
   }, [service]);
-
-  if (!service) {
-    notFound();
-    return null;
-  }
   
   const generateContent = async () => {
     if (!service) return;
@@ -77,6 +72,10 @@ export default function ServicePage() {
     }
   };
 
+  if (!service) {
+    notFound();
+    return null;
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden">
