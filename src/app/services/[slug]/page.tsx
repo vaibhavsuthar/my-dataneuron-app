@@ -135,9 +135,10 @@ export default function ServicePage() {
             <Card className="aspect-video w-full">
                 <CardContent className="p-2 h-full">
                 {isLoading || isGeneratingImage ? (
-                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg">
-                        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                        <p className="mt-4 text-lg">AI is crafting your animation...</p>
+                    <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg p-4 text-center">
+                        <p className="text-lg font-semibold mb-2">🔹 "Experience AI in action"</p>
+                        <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
+                        <p className="font-bold">➡️ "Experience AI in action — Press regenerate and let DataNeuron work its magic!"</p>
                     </div>
                 ) : service.slug === 'video-editing' ? (
                      <div className="relative w-full h-full rounded-lg overflow-hidden">
