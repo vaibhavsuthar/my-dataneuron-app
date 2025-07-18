@@ -199,7 +199,7 @@ export default function ServicePage() {
                 <Card>
                     <CardHeader>
                         <CardTitle>Market Insights</CardTitle>
-                    </Header>
+                    </CardHeader>
                     <CardContent>
                         {isLoading ? (
                             <div className="space-y-4">
