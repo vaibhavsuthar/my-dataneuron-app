@@ -24,7 +24,7 @@ import {
   Group,
   Cog,
   Landmark,
-  Layers3d,
+  Layers3,
 } from 'lucide-react';
 
 interface Service {
@@ -92,7 +92,7 @@ export const services: Service[] = [
    {
     title: '3D Animation',
     slug: '3d-animation',
-    icon: Layers3d,
+    icon: Layers3,
     description: 'Creating captivating and dynamic 3D animations for your projects.',
   },
   {
