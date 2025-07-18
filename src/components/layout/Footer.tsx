@@ -1,10 +1,28 @@
+
+'use client';
+
 import Link from 'next/link';
 import { Logo } from '../shared/Logo';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, ShieldAlert } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, ShieldAlert, Send } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { useToast } from '@/hooks/use-toast';
+
+const newsletterFormSchema = z.object({
+  email: z.string().email('Please enter a valid email address.'),
+});
 
 export function Footer() {
+  const { toast } = useToast();
+  const form = useForm<z.infer<typeof newsletterFormSchema>>({
+    resolver: zodResolver(newsletterFormSchema),
+    defaultValues: { email: '' },
+  });
+
   const socialLinks = [
     { name: 'Facebook', icon: Facebook, href: '#' },
     { name: 'LinkedIn', icon: Linkedin, href: '#' },
@@ -18,6 +36,24 @@ export function Footer() {
     { name: 'Portfolio', href: '#portfolio' },
     { name: 'Contact', href: '#contact' },
   ];
+
+  function onSubmit(values: z.infer<typeof newsletterFormSchema>) {
+    const subject = encodeURIComponent('Newsletter Subscription Request');
+    const body = encodeURIComponent(
+      `Please add the following email to the newsletter list:\n\nEmail: ${values.email}`
+    );
+    const mailtoLink = `mailto:aidataneuronbusiness@gmail.com?subject=${subject}&body=${body}`;
+
+    window.location.href = mailtoLink;
+    
+    toast({
+        title: "Subscription Request Sent!",
+        description: "Your email client has been opened to send your subscription request.",
+    });
+
+    form.reset();
+  }
+
 
   return (
     <footer className="bg-card text-card-foreground border-t">
@@ -80,10 +116,30 @@ export function Footer() {
         <div>
           <h3 className="mb-4 text-lg font-semibold">Newsletter</h3>
           <p className="mb-4 text-muted-foreground">Stay updated with our latest insights and news.</p>
-          <form className="flex w-full max-w-sm items-center space-x-2">
-            <Input type="email" placeholder="Email" className="bg-background" />
-            <Button type="submit">Subscribe</Button>
-          </form>
+           <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex w-full max-w-sm items-start space-x-2">
+                      <div className="relative flex-grow">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <FormControl>
+                            <Input type="email" placeholder="Your email..." {...field} className="pl-9" />
+                          </FormControl>
+                      </div>
+                      <Button type="submit" size="icon" aria-label="Subscribe">
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
         </div>
       </div>
       <div className="border-t">
