@@ -24,12 +24,6 @@ export default function ServicePage() {
 
   const service = services.find(s => s.slug === slug);
 
-  useEffect(() => {
-    if (service) {
-      generateContent();
-    }
-  }, [service]);
-  
   const generateContent = async () => {
     if (!service) return;
     setIsLoading(true);
@@ -72,6 +66,12 @@ export default function ServicePage() {
     }
   };
 
+  useEffect(() => {
+    if (service) {
+      generateContent();
+    }
+  }, [service]);
+  
   if (!service) {
     notFound();
     return null;
@@ -79,7 +79,6 @@ export default function ServicePage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Animated Gradient Background */}
       <div className="absolute inset-0 z-0 opacity-20">
         <div className="absolute -inset-24 bg-gradient-to-r from-primary via-accent to-secondary animate-[spin_20s_linear_infinite]"></div>
       </div>
