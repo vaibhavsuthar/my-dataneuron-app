@@ -61,7 +61,7 @@ export default function ServicePage() {
         const result = await regenerateServiceImage({ serviceTitle: service.title });
         if (result.animationDataUri) {
             setContent(prev => {
-                if (!prev) return null; // Should not happen if button is clicked
+                if (!prev) return null;
                 return { ...prev, animationDataUri: result.animationDataUri };
             });
         }
@@ -143,7 +143,7 @@ export default function ServicePage() {
                             muted
                             playsInline
                             className="w-full h-full object-cover"
-                            poster="https://placehold.co/800x450"
+                            poster="https://placehold.co/800x450.png"
                         >
                             <source src="/video-editing-service.mp4" type="video/mp4" />
                             Your browser does not support the video tag.
@@ -152,7 +152,6 @@ export default function ServicePage() {
                 ) : isLoading || isGeneratingImage ? (
                     <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg p-4 text-center">
                         <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-                        <p className="text-lg font-semibold mb-2">🔹 "Experience AI in action"</p>
                         <p className="font-bold">➡️ "Experience AI in action — Press regenerate and let DataNeuron work its magic!"</p>
                     </div>
                 ) : (
@@ -179,7 +178,7 @@ export default function ServicePage() {
                 <Card>
                     <CardHeader>
                         <CardTitle>Core Benefits</CardTitle>
-                    </Header>
+                    </CardHeader>
                     <CardContent className="space-y-4">
                         {isLoading ? (
                             Array.from({length: 3}).map((_, i) => (
