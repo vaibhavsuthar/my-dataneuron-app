@@ -24,23 +24,30 @@ export default function ServicePage() {
 
   const service = services.find(s => s.slug === slug);
 
-  const generateContent = async () => {
-    if (!service) return;
-    setIsLoading(true);
-    try {
-      const result = await generateServicePageContent({ serviceTitle: service.title });
-      setContent(result);
-    } catch (e) {
-      console.error(e);
-      toast({
-        variant: "destructive",
-        title: "Content Generation Failed",
-        description: "Could not generate content for this page. Please try again later.",
-      });
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    const generateContent = async () => {
+      if (!service) return;
+      setIsLoading(true);
+      try {
+        const result = await generateServicePageContent({ serviceTitle: service.title });
+        setContent(result);
+      } catch (e) {
+        console.error(e);
+        toast({
+          variant: "destructive",
+          title: "Content Generation Failed",
+          description: "Could not generate content for this page. Please try again later.",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    if (service) {
+      generateContent();
     }
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [service]);
 
   const handleRegenerateImage = async () => {
     if (!service) return;
@@ -65,13 +72,6 @@ export default function ServicePage() {
         setIsGeneratingImage(false);
     }
   };
-
-  useEffect(() => {
-    if (service) {
-      generateContent();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [service]);
   
   if (!service) {
     notFound();
