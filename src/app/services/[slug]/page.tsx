@@ -70,6 +70,7 @@ export default function ServicePage() {
     if (service) {
       generateContent();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [service]);
   
   if (!service) {
