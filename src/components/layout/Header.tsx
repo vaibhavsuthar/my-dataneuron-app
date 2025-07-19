@@ -9,6 +9,12 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
+declare global {
+  interface Window {
+    Calendly: any;
+  }
+}
+
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
@@ -28,6 +34,14 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleCalendlyClick = () => {
+    if (window.Calendly) {
+      window.Calendly.initPopupWidget({
+        url: 'https://calendly.com/aidataneuronbusiness/30min',
+      });
+    }
+  };
+
   const navItems = navLinks.map((link) => (
     <Link
       key={link.name}
@@ -41,8 +55,6 @@ export function Header() {
       {link.name}
     </Link>
   ));
-
-  const whatsappLink = "https://wa.me/917859958279";
 
   return (
     <header className={cn(
@@ -58,8 +70,8 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Button asChild className="hidden md:flex">
-             <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">Let&apos;s Talk</Link>
+          <Button onClick={handleCalendlyClick} className="hidden md:flex bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+             Let&apos;s Talk
           </Button>
           <Sheet>
             <SheetTrigger asChild>
@@ -88,8 +100,8 @@ export function Header() {
                     </Link>
                   ))}
                 </div>
-                 <Button asChild className="w-full">
-                    <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">Let&apos;s Talk</Link>
+                 <Button onClick={handleCalendlyClick} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                    Let&apos;s Talk
                  </Button>
               </div>
             </SheetContent>
