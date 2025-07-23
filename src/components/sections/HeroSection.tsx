@@ -24,10 +24,10 @@ export function HeroSection() {
         <div className="mb-4 inline-block rounded-full bg-primary/20 px-4 py-2 text-sm font-semibold text-primary-foreground border border-primary/30 backdrop-blur-sm">
           Welcome to the Future of Data
         </div>
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl font-headline">
+        <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl font-headline">
           Transforming Data into Intelligence
         </h1>
-        <p className="mt-6 max-w-2xl text-lg text-primary-foreground/80 md:text-xl">
+        <p className="mt-6 max-w-2xl text-lg text-white/80 md:text-xl">
           DataNeuron specializes in AI-powered solutions, digital marketing, and creative services to elevate your business in the digital age.
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-4">
