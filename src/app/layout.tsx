@@ -5,7 +5,6 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import Head from 'next/head';
-import SmoothScroll from '@/components/shared/SmoothScroll';
 
 export const metadata: Metadata = {
   title: 'DataNeuron Digital - Transforming Data into Intelligence',
@@ -27,12 +26,10 @@ export default function RootLayout({
         <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
       </head>
       <body className="font-body bg-background text-foreground antialiased">
-        <SmoothScroll>
           <Header />
           <main>{children}</main>
           <Footer />
           <Toaster />
-        </SmoothScroll>
         {/* Calendly widget script */}
         <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
       </body>
