@@ -1,13 +1,45 @@
+
+'use client';
+
+import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { services } from '@/lib/data';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function ServicesSection() {
+  const sectionRef = useRef(null);
+  const titleRef = useRef(null);
+
+  useEffect(() => {
+    const el = titleRef.current;
+    if (el) {
+      gsap.fromTo(el, 
+        { opacity: 0, y: 50 }, 
+        {
+          opacity: 1, 
+          y: 0,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 80%', 
+            end: 'top 50%',
+            scrub: 1,
+          }
+        }
+      );
+    }
+  }, []);
+
   return (
-    <section id="services" className="py-16 sm:py-24 bg-background">
+    <section id="services" ref={sectionRef} className="py-16 sm:py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl font-headline">Our Core Offerings</h2>
+          <h2 ref={titleRef} className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl font-headline">Our Core Offerings</h2>
           <p className="mt-4 text-lg text-muted-foreground">
             We provide a comprehensive suite of services to power your digital transformation and drive growth.
           </p>
