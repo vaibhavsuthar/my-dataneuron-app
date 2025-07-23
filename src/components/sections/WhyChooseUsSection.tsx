@@ -5,7 +5,6 @@ import { Award, Users, LifeBuoy } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEffect, useState, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { textToSpeech } from '@/ai/flows/text-to-speech-flow';
 
 const CountUpNumber = ({ to, duration = 2000 }: { to: number, duration?: number }) => {
   const [count, setCount] = useState(0);
@@ -60,32 +59,9 @@ export function WhyChooseUsSection() {
   ];
 
   const sectionTitle = "Why Partner with DataNeuron?";
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { ref: inViewRef, inView } = useInView({ triggerOnce: true, threshold: 0.5 });
-  const [hasSpoken, setHasSpoken] = useState(false);
-
-  useEffect(() => {
-    const playSpeech = async () => {
-      if (inView && !hasSpoken) {
-        try {
-          setHasSpoken(true);
-          const response = await textToSpeech(sectionTitle);
-          if (response.media) {
-            if (audioRef.current) {
-              audioRef.current.src = response.media;
-              audioRef.current.play().catch(e => console.error("Audio playback failed:", e));
-            }
-          }
-        } catch (error) {
-          console.error("Failed to generate speech:", error);
-        }
-      }
-    };
-    playSpeech();
-  }, [inView, hasSpoken, sectionTitle]);
 
   return (
-    <section id="why-us" className="relative w-full py-16 sm:py-24 bg-secondary/50 overflow-hidden" ref={inViewRef}>
+    <section id="why-us" className="relative w-full py-16 sm:py-24 bg-secondary/50 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <video
             autoPlay
@@ -135,7 +111,6 @@ export function WhyChooseUsSection() {
             ))}
         </div>
         </div>
-        <audio ref={audioRef} className="hidden" />
     </section>
   );
 }
