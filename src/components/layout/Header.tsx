@@ -7,7 +7,7 @@ import { Menu } from 'lucide-react';
 import { Logo } from '../shared/Logo';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 declare global {
   interface Window {
@@ -18,6 +18,9 @@ declare global {
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isFirstLoad = useRef(true);
+
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -27,12 +30,35 @@ export function Header() {
   ];
 
   useEffect(() => {
+    // Initialize the audio element once.
+    if (!audioRef.current) {
+        audioRef.current = new Audio('/navigation-sound.mp3');
+        audioRef.current.preload = 'auto';
+    }
+  }, []);
+
+
+  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
+  useEffect(() => {
+    // Don't play sound on the very first load, only on navigation.
+    if (isFirstLoad.current) {
+      isFirstLoad.current = false;
+      return;
+    }
+    
+    if (audioRef.current) {
+        audioRef.current.play().catch(error => {
+            console.error("Audio play failed:", error);
+        });
+    }
+  }, [pathname]);
 
   const handleCalendlyClick = () => {
     if (window.Calendly) {
@@ -77,7 +103,7 @@ export function Header() {
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className={cn(
                   "md:hidden",
-                  isScrolled ? "bg-card text-foreground" : "bg-white/10 border-white/50 text-white hover:bg-white/20"
+                  isScrolled ? "bg-card text-foreground" : "text-white hover:bg-white/20"
               )}>
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle navigation menu</span>
