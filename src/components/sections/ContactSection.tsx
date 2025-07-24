@@ -37,11 +37,17 @@ export function ContactSection() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     const subject = encodeURIComponent(`Contact Form: ${values.service || 'General Inquiry'} from ${values.name}`);
     const body = encodeURIComponent(
-      `Name: ${values.name}\n` +
-      `Email: ${values.email}\n` +
-      `WhatsApp Number: ${values.whatsappNumber || 'Not provided'}\n` +
-      `Service Interested In: ${values.service || 'Not specified'}\n\n` +
-      `Message:\n${values.message}`
+      `Name: ${values.name}
+` +
+      `Email: ${values.email}
+` +
+      `WhatsApp Number: ${values.whatsappNumber || 'Not provided'}
+` +
+      `Service Interested In: ${values.service || 'Not specified'}
+
+` +
+      `Message:
+${values.message}`
     );
     const mailtoLink = `mailto:aidataneuronbusiness@gmail.com?subject=${subject}&body=${body}`;
 
@@ -188,7 +194,7 @@ export function ContactSection() {
                     className="w-full h-full object-cover"
                     poster="https://placehold.co/600x400"
                 >
-                    <source src="/contact-video.mp4" type="video/mp4" />
+                    <source src="/Dataneuron.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
             </div>

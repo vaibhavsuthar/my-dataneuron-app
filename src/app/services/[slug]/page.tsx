@@ -6,10 +6,10 @@ import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Loader2, Wand2, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Loader2, Wand2, CheckCircle } from 'lucide-react'; // Added Wand2 back
 import { services } from '@/lib/data';
 import Link from 'next/link';
-import { generateServicePageContent, ServicePageContent, regenerateServiceImage } from '@/ai/flows/service-page-flow';
+import { generateServicePageContent, ServicePageContent, regenerateServiceImage } from '@/ai/flows/service-page-flow'; // Added regenerateServiceImage back
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -20,7 +20,7 @@ export default function ServicePage() {
 
   const [content, setContent] = useState<ServicePageContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false); // Added isGeneratingImage state back
 
   const service = services.find(s => s.slug === slug);
 
@@ -49,7 +49,7 @@ export default function ServicePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [service]);
 
-  const handleRegenerateImage = async () => {
+  const handleRegenerateImage = async () => { // Added handleRegenerateImage function back
     if (!service) return;
     setIsGeneratingImage(true);
 
@@ -148,16 +148,49 @@ export default function ServicePage() {
                             Your browser does not support the video tag.
                         </video>
                     </div>
-                ) : isLoading || isGeneratingImage ? (
+                ) : isLoading ? (
                     <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg p-4 text-center">
                         <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-                        <p className="font-bold">➡️ "Experience AI in action — Press regenerate and let DataNeuron work its magic!"</p>
+                        <p className="font-bold">Generating content...</p>
                     </div>
                 ) : (
-                    content?.animationDataUri && (
-                    <div className="relative w-full h-full rounded-lg overflow-hidden">
-                        <Image src={content.animationDataUri} alt={`3D animation for ${service.title}`} layout="fill" objectFit="cover" />
-                    </div>
+                     // Display last generated image while generating new one
+                    (isGeneratingImage && content?.animationDataUri) ? (
+                         <div className="relative w-full h-full rounded-lg overflow-hidden">
+                             <Image 
+                                src={content.animationDataUri} 
+                                alt={`3D animation for ${service.title}`} 
+                                fill 
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                                className="object-cover"
+                             />
+                              {/* Optional: Add a subtle overlay and loader on top of the old image */}
+                             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white">
+                                  <Loader2 className="h-8 w-8 animate-spin mb-2" />
+                                  <p>Generating new image...</p>
+                             </div>
+                         </div>
+                    ) : (
+                        // Display loading indicator if no old image or initial loading
+                        isGeneratingImage ? (
+                             <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg p-4 text-center">
+                                <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+                                <p className="font-bold">Generating new image...</p>
+                            </div>
+                        ) : (
+                            // Display the generated image when available and not generating
+                            content?.animationDataUri && (
+                                <div className="relative w-full h-full rounded-lg overflow-hidden">
+                                    <Image 
+                                        src={content.animationDataUri} 
+                                        alt={`3D animation for ${service.title}`} 
+                                        fill 
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                                        className="object-cover"
+                                    />
+                                </div>
+                            )
+                        )
                     )
                 )}
                 </CardContent>

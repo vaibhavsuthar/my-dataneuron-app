@@ -19,7 +19,6 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const isFirstLoad = useRef(true);
 
 
   const navLinks = [
@@ -32,8 +31,9 @@ export function Header() {
   useEffect(() => {
     // Initialize the audio element once.
     if (!audioRef.current) {
-        audioRef.current = new Audio('/navigation-sound.mp3');
+        audioRef.current = new Audio('/navigation-sound.wav');
         audioRef.current.preload = 'auto';
+        audioRef.current.volume = 0.7; // Set volume to 70%
     }
   }, []);
 
@@ -46,19 +46,14 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  useEffect(() => {
-    // Don't play sound on the very first load, only on navigation.
-    if (isFirstLoad.current) {
-      isFirstLoad.current = false;
-      return;
-    }
-    
+  const playNavigationSound = () => {
     if (audioRef.current) {
-        audioRef.current.play().catch(error => {
-            console.error("Audio play failed:", error);
-        });
+      audioRef.current.currentTime = 0; // Rewind to the start
+      audioRef.current.play().catch(error => {
+          console.error("Audio play failed:", error);
+      });
     }
-  }, [pathname]);
+  };
 
   const handleCalendlyClick = () => {
     if (window.Calendly) {
@@ -77,6 +72,7 @@ export function Header() {
         'text-foreground/80 hover:text-primary',
         pathname === link.href ? 'text-primary' : ''
       )}
+      onClick={playNavigationSound}
     >
       {link.name}
     </Link>
@@ -118,6 +114,7 @@ export function Header() {
                         href={link.href}
                         className='transition-colors font-medium text-foreground/80 hover:text-primary'
                         onClick={() => {
+                            playNavigationSound();
                             const trigger = document.querySelector('[data-radix-collection-item] > button');
                             if (trigger) (trigger as HTMLElement).click();
                         }}
