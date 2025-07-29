@@ -46,7 +46,6 @@ export default function RealEstatePage() {
         const q = query(
             collection(db, "properties"), 
             where("approved", "==", true),
-            orderBy("approved"),
             orderBy("createdAt", "desc")
         );
         const querySnapshot = await getDocs(q);
