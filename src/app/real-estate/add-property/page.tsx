@@ -51,9 +51,12 @@ export default function AddPropertyPage() {
       listingType: '',
       city: '',
       area: '',
+      price: 0,
+      size: 0,
       description: '',
       ownerName: '',
       ownerMobile: '',
+      photos: undefined,
     },
   });
 
@@ -184,7 +187,7 @@ export default function AddPropertyPage() {
                             <div className="relative">
                             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input placeholder="e.g., Ahmedabad" {...field} className="pl-10" />
+                                <Input placeholder="e.g., Ahmedabad" {...field} />
                             </FormControl>
                             </div>
                             <FormMessage />
@@ -200,7 +203,7 @@ export default function AddPropertyPage() {
                             <div className="relative">
                             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input placeholder="e.g., Satellite" {...field} className="pl-10" />
+                                <Input placeholder="e.g., Satellite" {...field} />
                             </FormControl>
                             </div>
                             <FormMessage />
@@ -287,7 +290,7 @@ export default function AddPropertyPage() {
                             <div className="relative">
                             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input placeholder="John Doe" {...field} disabled={isSubmitting} className="pl-10" />
+                                <Input placeholder="John Doe" {...field} disabled={isSubmitting} />
                             </FormControl>
                             </div>
                             <FormMessage />
@@ -303,7 +306,7 @@ export default function AddPropertyPage() {
                             <div className="relative">
                             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input placeholder="+91 98765 43210" {...field} disabled={isSubmitting} className="pl-10" />
+                                <Input placeholder="+91 98765 43210" {...field} disabled={isSubmitting} />
                             </FormControl>
                             </div>
                             <FormMessage />
@@ -328,5 +331,3 @@ export default function AddPropertyPage() {
     </div>
   );
 }
-
-    
