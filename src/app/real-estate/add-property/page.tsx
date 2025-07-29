@@ -14,6 +14,9 @@ import { ArrowLeft, Building, Home, Landmark, MapPin, Maximize, MessageSquare, P
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg"];
+
 const propertyFormSchema = z.object({
   propertyType: z.string().min(1, 'Please select a property type.'),
   listingType: z.string().min(1, 'Please select a listing type.'),
@@ -24,7 +27,14 @@ const propertyFormSchema = z.object({
   description: z.string().min(20, 'Description must be at least 20 characters.'),
   ownerName: z.string().optional(),
   ownerMobile: z.string().min(10, 'A valid mobile number is required.'),
-  photos: z.any().optional(), // Will be handled by a file input
+  photos: z
+    .any()
+    .refine((files) => files?.length > 0, "At least one photo is required.")
+    .refine((files) => files?.length <= 3, "You can upload a maximum of 3 photos.")
+    .refine(
+        (files) => Array.from(files).every((file: any) => ACCEPTED_IMAGE_TYPES.includes(file.type)),
+        "Only .jpg and .jpeg formats are supported."
+    ),
 });
 
 export default function AddPropertyPage() {
@@ -118,7 +128,6 @@ export default function AddPropertyPage() {
                           <SelectContent>
                             <SelectItem value="sell">Sell</SelectItem>
                             <SelectItem value="rent">Rent</SelectItem>
-                            <SelectItem value="buy">Buy</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -215,13 +224,15 @@ export default function AddPropertyPage() {
                     name="photos"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Upload Photos (Max 5)</FormLabel>
-                        <div className="relative">
-                          <Upload className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                          <FormControl>
-                            <Input type="file" {...field} className="pl-10" multiple accept="image/*" />
-                          </FormControl>
-                        </div>
+                        <FormLabel>Upload Photos (Max 3, JPG only)</FormLabel>
+                         <FormControl>
+                           <Input 
+                              type="file"
+                              multiple
+                              accept="image/jpeg, image/jpg"
+                              onChange={(e) => field.onChange(e.target.files)}
+                           />
+                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
