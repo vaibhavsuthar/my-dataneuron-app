@@ -36,7 +36,10 @@ const propertyFormSchema = z.object({
     .refine((files) => files?.length > 0, "At least one photo is required.")
     .refine((files) => files?.length <= 3, "You can upload a maximum of 3 photos.")
     .refine(
-        (files) => Array.from(files).every((file: any) => ACCEPTED_IMAGE_TYPES.includes(file.type)),
+        (files) => {
+            if (!files || files.length === 0) return true; // Allow empty files to pass here, other rules will catch it
+            return Array.from(files).every((file: any) => ACCEPTED_IMAGE_TYPES.includes(file.type));
+        },
         "Only .jpg and .jpeg formats are supported."
     ),
 });
