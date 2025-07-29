@@ -227,13 +227,19 @@ export default function RealEstatePage() {
                     FOR {prop.listingType.toUpperCase()}
                     </div>
                     <div className="aspect-video w-full">
-                    <Image
-                        src={prop.photoUrls[0]}
-                        alt={prop.title}
-                        width={600}
-                        height={400}
-                        className="object-cover w-full h-full"
-                    />
+                    {prop.photoUrls && prop.photoUrls.length > 0 ? (
+                        <Image
+                            src={prop.photoUrls[0]}
+                            alt={prop.title}
+                            width={600}
+                            height={400}
+                            className="object-cover w-full h-full"
+                        />
+                    ) : (
+                         <div className="w-full h-full bg-muted flex items-center justify-center">
+                             <Home className="w-16 h-16 text-muted-foreground" />
+                         </div>
+                    )}
                     </div>
                 </CardHeader>
                 <CardContent className="p-6 flex-grow">
