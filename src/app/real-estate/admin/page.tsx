@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ArrowLeft, Download, CheckCircle, XCircle, Loader2, BadgeAlert } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, Timestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
@@ -35,7 +35,11 @@ export default function RealEstateAdminPage() {
   const fetchProperties = async () => {
     setIsLoading(true);
     try {
-      const q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
+      const q = query(
+          collection(db, "properties"), 
+          where("approved", "==", false),
+          orderBy("createdAt", "desc")
+      );
       const querySnapshot = await getDocs(q);
       const props: Property[] = [];
       querySnapshot.forEach((doc) => {
@@ -52,7 +56,7 @@ export default function RealEstateAdminPage() {
       toast({
           variant: "destructive",
           title: "Failed to load properties",
-          description: "Could not fetch data from the database.",
+          description: "Could not fetch data from the database. Please ensure the required Firestore index is created.",
       });
     } finally {
       setIsLoading(false);
@@ -134,8 +138,8 @@ export default function RealEstateAdminPage() {
         <Card className="bg-card">
           <CardHeader className="flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-3xl font-bold font-headline">Admin Panel</CardTitle>
-              <CardDescription>Manage and export property listings.</CardDescription>
+              <CardTitle className="text-3xl font-bold font-headline">Pending Property Approvals</CardTitle>
+              <CardDescription>Review and approve new property submissions.</CardDescription>
             </div>
             <Button onClick={handleExportCSV} disabled={isLoading || properties.length === 0}>
               <Download className="mr-2" />
@@ -150,9 +154,9 @@ export default function RealEstateAdminPage() {
             ) : properties.length === 0 ? (
                 <div className="text-center py-16">
                     <BadgeAlert className="mx-auto h-12 w-12 text-muted-foreground" />
-                    <h3 className="mt-4 text-lg font-medium">No Properties Found</h3>
+                    <h3 className="mt-4 text-lg font-medium">No Pending Approvals</h3>
                     <p className="mt-1 text-sm text-muted-foreground">
-                        There are no submitted properties to display yet.
+                        There are no new properties waiting for review.
                     </p>
                 </div>
             ) : (
@@ -164,7 +168,6 @@ export default function RealEstateAdminPage() {
                             <TableHead>Price</TableHead>
                             <TableHead>Type</TableHead>
                             <TableHead>Owner</TableHead>
-                            <TableHead>Status</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -184,18 +187,11 @@ export default function RealEstateAdminPage() {
                                     <div>{prop.ownerName || 'N/A'}</div>
                                     <div className="text-sm text-muted-foreground">{prop.ownerMobile}</div>
                                 </TableCell>
-                                <TableCell>
-                                    <Badge variant={prop.approved ? "default" : "secondary"}>
-                                        {prop.approved ? "Approved" : "Pending"}
-                                    </Badge>
-                                </TableCell>
                                 <TableCell className="space-x-2 text-right">
-                                    {!prop.approved && (
-                                        <Button variant="outline" size="sm" onClick={() => handleApprove(prop.id)}>
-                                            <CheckCircle className="mr-2" />
-                                            Approve
-                                        </Button>
-                                    )}
+                                    <Button variant="outline" size="sm" onClick={() => handleApprove(prop.id)}>
+                                        <CheckCircle className="mr-2" />
+                                        Approve
+                                    </Button>
                                     <Button variant="destructive" size="sm" onClick={() => handleDelete(prop.id)}>
                                         <XCircle className="mr-2" />
                                         Delete
