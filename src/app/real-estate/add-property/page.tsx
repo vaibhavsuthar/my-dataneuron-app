@@ -10,9 +10,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, Building, Home, Landmark, MapPin, Maximize, MessageSquare, Phone, Upload, User, Users, FileText } from 'lucide-react';
+import { ArrowLeft, Building, Home, Landmark, MapPin, Maximize, MessageSquare, Phone, Upload, User, Users, FileText, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { db, storage } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useState } from 'react';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg"];
@@ -39,6 +43,7 @@ const propertyFormSchema = z.object({
 
 export default function AddPropertyPage() {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof propertyFormSchema>>({
     resolver: zodResolver(propertyFormSchema),
     defaultValues: {
@@ -46,22 +51,56 @@ export default function AddPropertyPage() {
       listingType: '',
       city: '',
       area: '',
-      price: 0,
-      size: 0,
       description: '',
       ownerName: '',
       ownerMobile: '',
     },
   });
 
-  // Placeholder for submission logic
-  function onSubmit(values: z.infer<typeof propertyFormSchema>) {
-    console.log(values);
-    toast({
-      title: 'Submission Received!',
-      description: 'Your property details have been submitted for review.',
-    });
-    form.reset();
+  async function onSubmit(values: z.infer<typeof propertyFormSchema>) {
+    setIsSubmitting(true);
+    try {
+      // 1. Upload photos to Firebase Storage
+      const photoUrls: string[] = [];
+      for (const file of Array.from(values.photos as FileList)) {
+        const storageRef = ref(storage, `properties/${Date.now()}-${file.name}`);
+        await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(storageRef);
+        photoUrls.push(downloadURL);
+      }
+
+      // 2. Save property data to Firestore
+      await addDoc(collection(db, "properties"), {
+        propertyType: values.propertyType,
+        listingType: values.listingType,
+        location: `${values.area}, ${values.city}`,
+        city: values.city,
+        area: values.area,
+        price: values.price,
+        size: values.size,
+        description: values.description,
+        ownerName: values.ownerName,
+        ownerMobile: values.ownerMobile,
+        photoUrls: photoUrls,
+        approved: false, // Default to not approved
+        createdAt: serverTimestamp(),
+      });
+
+      toast({
+        title: 'Submission Received!',
+        description: 'Your property has been submitted for review. It will be live once approved by our team.',
+      });
+      form.reset();
+    } catch (error) {
+      console.error("Error submitting property:", error);
+      toast({
+        variant: "destructive",
+        title: 'Submission Failed',
+        description: 'Something went wrong. Please try again.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -100,10 +139,10 @@ export default function AddPropertyPage() {
                             </FormControl>
                            </div>
                           <SelectContent>
-                            <SelectItem value="house-flat"><Home className="mr-2"/> House / Flat</SelectItem>
-                            <SelectItem value="tenament"><Users className="mr-2"/> Tenament</SelectItem>
-                            <SelectItem value="commercial"><Building className="mr-2"/> Commercial Shop/Office</SelectItem>
-                            <SelectItem value="land-plot"><Landmark className="mr-2"/> Land / Plot</SelectItem>
+                            <SelectItem value="House / Flat"><Home className="mr-2"/> House / Flat</SelectItem>
+                            <SelectItem value="Tenament"><Users className="mr-2"/> Tenament</SelectItem>
+                            <SelectItem value="Commercial Shop/Office"><Building className="mr-2"/> Commercial Shop/Office</SelectItem>
+                            <SelectItem value="Land / Plot"><Landmark className="mr-2"/> Land / Plot</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -126,8 +165,8 @@ export default function AddPropertyPage() {
                             </FormControl>
                            </div>
                           <SelectContent>
-                            <SelectItem value="sell">Sell</SelectItem>
-                            <SelectItem value="rent">Rent</SelectItem>
+                            <SelectItem value="Sell">Sell</SelectItem>
+                            <SelectItem value="Rent">Rent</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -231,6 +270,7 @@ export default function AddPropertyPage() {
                               multiple
                               accept="image/jpeg, image/jpg"
                               onChange={(e) => field.onChange(e.target.files)}
+                              disabled={isSubmitting}
                            />
                          </FormControl>
                         <FormMessage />
@@ -247,7 +287,7 @@ export default function AddPropertyPage() {
                             <div className="relative">
                             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input placeholder="John Doe" {...field} className="pl-10" />
+                                <Input placeholder="John Doe" {...field} disabled={isSubmitting} className="pl-10" />
                             </FormControl>
                             </div>
                             <FormMessage />
@@ -263,7 +303,7 @@ export default function AddPropertyPage() {
                             <div className="relative">
                             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input placeholder="+91 98765 43210" {...field} className="pl-10" />
+                                <Input placeholder="+91 98765 43210" {...field} disabled={isSubmitting} className="pl-10" />
                             </FormControl>
                             </div>
                             <FormMessage />
@@ -271,7 +311,15 @@ export default function AddPropertyPage() {
                         )}
                     />
                 </div>
-                <Button type="submit" size="lg" className="w-full text-lg">Submit Property for Review</Button>
+                <Button type="submit" size="lg" className="w-full text-lg" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                        <>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Submitting...
+                        </>
+                    ) : (
+                        'Submit Property for Review'
+                    )}
+                </Button>
               </form>
             </Form>
           </CardContent>
@@ -280,3 +328,5 @@ export default function AddPropertyPage() {
     </div>
   );
 }
+
+    
