@@ -6,7 +6,7 @@ import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   projectId: 'dataneuron-digital',
-  appId: '1:5877870390:web:4e53290a14a922d43f8d97',
+  appId: '1:5877870390:web:f4830d57980046233f8d97',
   storageBucket: 'dataneuron-digital.firebasestorage.app',
   apiKey: 'AIzaSyAfJ6NnYS4g5Yk2Bbd-NKXsOf4aP4KDBfQ',
   authDomain: 'dataneuron-digital.firebaseapp.com',
