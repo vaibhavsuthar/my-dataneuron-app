@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, Building, DollarSign, Home, Landmark, MapPin, Maximize, MessageSquare, Phone, Upload, User, Users, FileText } from 'lucide-react';
+import { ArrowLeft, Building, Home, Landmark, MapPin, Maximize, MessageSquare, Phone, Upload, User, Users, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 
@@ -168,7 +168,7 @@ export default function AddPropertyPage() {
                         <FormItem>
                             <FormLabel>Price (INR)</FormLabel>
                             <div className="relative">
-                            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground">₹</span>
                             <FormControl>
                                 <Input type="number" placeholder="e.g., 5000000" {...field} className="pl-10" />
                             </FormControl>

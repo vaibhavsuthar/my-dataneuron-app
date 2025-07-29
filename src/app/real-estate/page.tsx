@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Building, DollarSign, Home, Landmark, MapPin, Search, Users, Phone, PlusCircle } from 'lucide-react';
+import { Building, Home, Landmark, MapPin, Search, Users, Phone, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 
 // Placeholder data - this will eventually come from Firebase
@@ -105,7 +105,7 @@ export default function RealEstatePage() {
               </SelectContent>
             </Select>
             <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground flex items-center">₹</span>
                 <Input
                     type="text"
                     placeholder="Max Budget (e.g., 5000000)"
@@ -149,7 +149,7 @@ export default function RealEstatePage() {
                 <p className="text-muted-foreground text-sm line-clamp-3">{prop.description}</p>
               </CardContent>
               <CardFooter className="p-6 pt-0 flex justify-between items-center">
-                 <p className="text-2xl font-bold text-primary">{prop.price}</p>
+                 <p className="text-2xl font-bold text-primary">₹{prop.price}</p>
                  <Button onClick={handleContact}>
                     <Phone className="mr-2 h-4 w-4" />
                     Contact
