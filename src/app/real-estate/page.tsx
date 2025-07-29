@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Building, Home, Landmark, MapPin, Search, Users, Phone, PlusCircle } from 'lucide-react';
+import { Building, Home, Landmark, MapPin, Search, Users, Phone, PlusCircle, Shield } from 'lucide-react';
 import Link from 'next/link';
 
 // Placeholder data - this will eventually come from Firebase
@@ -71,7 +71,15 @@ export default function RealEstatePage() {
 
         <Card className="mb-12 bg-card/80 backdrop-blur-sm">
             <CardHeader className="flex-row items-center justify-between">
-                <CardTitle>Filter Properties</CardTitle>
+                <div className="flex items-center gap-4">
+                    <CardTitle>Filter Properties</CardTitle>
+                    <Button asChild variant="secondary">
+                        <Link href="/real-estate/admin">
+                            <Shield className="mr-2" />
+                            Admin
+                        </Link>
+                    </Button>
+                </div>
                  <Button asChild>
                     <Link href="/real-estate/add-property">
                         <PlusCircle className="mr-2" />
