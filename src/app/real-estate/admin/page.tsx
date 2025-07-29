@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Download, CheckCircle, XCircle, Loader2, BadgeAlert } from 'lucide-react';
+import { ArrowLeft, Download, CheckCircle, XCircle, Loader2, BadgeAlert, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, Timestamp } from 'firebase/firestore';
@@ -139,12 +139,18 @@ export default function RealEstateAdminPage() {
           <CardHeader className="flex-row items-center justify-between">
             <div>
               <CardTitle className="text-3xl font-bold font-headline">Pending Property Approvals</CardTitle>
-              <CardDescription>Review and approve new property submissions.</CardDescription>
+              <CardDescription>Review and approve new property submissions. Newest submissions are shown first.</CardDescription>
             </div>
-            <Button onClick={handleExportCSV} disabled={isLoading || properties.length === 0}>
-              <Download className="mr-2" />
-              Export to CSV
-            </Button>
+            <div className="flex items-center gap-2">
+                <Button onClick={fetchProperties} variant="outline" disabled={isLoading}>
+                    <RefreshCw className={`mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                    Refresh
+                </Button>
+                <Button onClick={handleExportCSV} disabled={isLoading || properties.length === 0}>
+                <Download className="mr-2" />
+                Export to CSV
+                </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -175,7 +181,11 @@ export default function RealEstateAdminPage() {
                         {properties.map((prop) => (
                             <TableRow key={prop.id}>
                                 <TableCell>
-                                    <Image src={prop.photoUrls[0]} alt={prop.title} width={80} height={60} className="rounded-md object-cover" />
+                                    {prop.photoUrls && prop.photoUrls.length > 0 ? (
+                                        <Image src={prop.photoUrls[0]} alt={prop.title} width={80} height={60} className="rounded-md object-cover" />
+                                    ) : (
+                                        <div className="w-[80px] h-[60px] bg-muted rounded-md flex items-center justify-center text-xs text-muted-foreground">No Photo</div>
+                                    )}
                                 </TableCell>
                                 <TableCell className="font-medium max-w-xs break-words">
                                     {prop.title}
