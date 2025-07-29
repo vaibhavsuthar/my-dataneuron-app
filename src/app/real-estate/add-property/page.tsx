@@ -13,13 +13,22 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ArrowLeft, Building, Home, Landmark, MapPin, Maximize, MessageSquare, Phone, Upload, User, Users, FileText, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { db, storage } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useState } from 'react';
+import { processPropertySubmission } from '@/ai/flows/property-submission-flow';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg"];
+
+// Helper to convert file to Base64 Data URI
+const fileToDataUri = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
+
 
 const propertyFormSchema = z.object({
   propertyType: z.string().min(1, 'Please select a property type.'),
@@ -66,37 +75,36 @@ export default function AddPropertyPage() {
   async function onSubmit(values: z.infer<typeof propertyFormSchema>) {
     setIsSubmitting(true);
     try {
-      // 1. Upload photos to Firebase Storage
-      const photoUrls: string[] = [];
-      for (const file of Array.from(values.photos as FileList)) {
-        const storageRef = ref(storage, `properties/${Date.now()}-${file.name}`);
-        await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(storageRef);
-        photoUrls.push(downloadURL);
-      }
+        // Convert files to Data URIs
+        const photoDataUris: string[] = [];
+        for (const file of Array.from(values.photos as FileList)) {
+            const dataUri = await fileToDataUri(file);
+            photoDataUris.push(dataUri);
+        }
 
-      // 2. Save property data to Firestore
-      await addDoc(collection(db, "properties"), {
-        propertyType: values.propertyType,
-        listingType: values.listingType,
-        location: `${values.area}, ${values.city}`,
-        city: values.city,
-        area: values.area,
-        price: values.price,
-        size: values.size,
-        description: values.description,
-        ownerName: values.ownerName,
-        ownerMobile: values.ownerMobile,
-        photoUrls: photoUrls,
-        approved: false, // Default to not approved
-        createdAt: serverTimestamp(),
-      });
+        // Call the Genkit flow without awaiting it
+        processPropertySubmission({
+            propertyDetails: {
+                propertyType: values.propertyType,
+                listingType: values.listingType,
+                city: values.city,
+                area: values.area,
+                price: values.price,
+                size: values.size,
+                description: values.description,
+                ownerName: values.ownerName,
+                ownerMobile: values.ownerMobile,
+            },
+            photoDataUris: photoDataUris,
+        });
 
+      // Give immediate feedback to the user
       toast({
         title: 'Submission Received!',
-        description: 'Your property has been submitted for review. It will be live once approved by our team.',
+        description: 'Your property has been submitted. Photo uploads are processing in the background and will be available shortly.',
       });
       form.reset();
+      
     } catch (error) {
       console.error("Error submitting property:", error);
       toast({
