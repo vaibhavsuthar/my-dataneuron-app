@@ -19,7 +19,7 @@ export function ServicesSection() {
         <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {services.map((service, index) => (
             <div key={index}>
-              <Link href={`/services/${service.slug}`} className="group block h-full">
+              <Link href={service.isExternal ? service.slug : `/services/${service.slug}`} className="group block h-full">
                 <Card className="h-full text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 bg-card/60 backdrop-blur-sm hover:bg-card">
                   <CardHeader className="items-center">
                     <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground">

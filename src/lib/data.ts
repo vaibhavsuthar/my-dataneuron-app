@@ -32,6 +32,7 @@ interface Service {
   slug: string;
   icon: LucideIcon;
   description: string;
+  isExternal?: boolean;
 }
 
 export const services: Service[] = [
@@ -180,10 +181,11 @@ export const services: Service[] = [
     description: 'Integrating AI tools and providing expert consulting for your business.',
   },
   {
-    title: 'Real Estate Services (Ahmedabad & Gandhinagar)',
-    slug: 'real-estate-services',
+    title: 'Real Estate Platform',
+    slug: '/real-estate',
     icon: Building,
     description: 'Specialized digital services for the real estate sector.',
+    isExternal: true,
   },
 ];
 

@@ -6,10 +6,10 @@ import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Loader2, Wand2, CheckCircle } from 'lucide-react'; // Added Wand2 back
+import { ArrowLeft, Loader2, Wand2, CheckCircle } from 'lucide-react';
 import { services } from '@/lib/data';
 import Link from 'next/link';
-import { generateServicePageContent, ServicePageContent, regenerateServiceImage } from '@/ai/flows/service-page-flow'; // Added regenerateServiceImage back
+import { generateServicePageContent, ServicePageContent, regenerateServiceImage } from '@/ai/flows/service-page-flow';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -20,11 +20,19 @@ export default function ServicePage() {
 
   const [content, setContent] = useState<ServicePageContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false); // Added isGeneratingImage state back
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
 
   const service = services.find(s => s.slug === slug);
 
   useEffect(() => {
+    if (service && service.isExternal) {
+      // This is not a standard service page, so we don't need to generate content.
+      // The link in ServicesSection should handle navigation.
+      // If a user lands here directly, maybe redirect or show a specific message.
+      setIsLoading(false);
+      return;
+    }
+    
     const generateContent = async () => {
       if (!service) return;
       setIsLoading(true);
@@ -49,7 +57,7 @@ export default function ServicePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [service]);
 
-  const handleRegenerateImage = async () => { // Added handleRegenerateImage function back
+  const handleRegenerateImage = async () => {
     if (!service) return;
     setIsGeneratingImage(true);
 
@@ -77,6 +85,11 @@ export default function ServicePage() {
     notFound();
     return null;
   }
+  
+  if (service.isExternal) {
+     notFound(); // Or a custom component that says "This is an external link"
+     return null;
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -101,7 +114,7 @@ export default function ServicePage() {
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <service.icon className="h-8 w-8" />
               </div>
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl font-headline">{service.title}</h1>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl font-headline text-white">{service.title}</h1>
             </div>
 
             {isLoading ? (
@@ -154,7 +167,6 @@ export default function ServicePage() {
                         <p className="font-bold">Generating content...</p>
                     </div>
                 ) : (
-                     // Display last generated image while generating new one
                     (isGeneratingImage && content?.animationDataUri) ? (
                          <div className="relative w-full h-full rounded-lg overflow-hidden">
                              <Image 
@@ -164,21 +176,18 @@ export default function ServicePage() {
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
                                 className="object-cover"
                              />
-                              {/* Optional: Add a subtle overlay and loader on top of the old image */}
                              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white">
                                   <Loader2 className="h-8 w-8 animate-spin mb-2" />
                                   <p>Generating new image...</p>
                              </div>
                          </div>
                     ) : (
-                        // Display loading indicator if no old image or initial loading
                         isGeneratingImage ? (
                              <div className="flex flex-col items-center justify-center h-full text-muted-foreground bg-muted/50 rounded-lg p-4 text-center">
                                 <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
                                 <p className="font-bold">Generating new image...</p>
                             </div>
                         ) : (
-                            // Display the generated image when available and not generating
                             content?.animationDataUri && (
                                 <div className="relative w-full h-full rounded-lg overflow-hidden">
                                     <Image 
@@ -205,7 +214,7 @@ export default function ServicePage() {
         </div>
 
         <div className="mt-16 space-y-8">
-            <h2 className="text-3xl font-bold text-center font-headline">Key Benefits & Market Value</h2>
+            <h2 className="text-3xl font-bold text-center font-headline text-white">Key Benefits & Market Value</h2>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                 <Card>
                     <CardHeader>
@@ -248,7 +257,7 @@ export default function ServicePage() {
         </div>
 
          <div className="mt-16 text-center">
-            <h2 className="text-3xl font-bold font-headline">Ready to get started?</h2>
+            <h2 className="text-3xl font-bold font-headline text-white">Ready to get started?</h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">Let's discuss how our {service.title} service can help your business grow.</p>
             <Button asChild size="lg" className="mt-8 text-lg">
                 <Link href="/#contact">Contact Us Today</Link>
