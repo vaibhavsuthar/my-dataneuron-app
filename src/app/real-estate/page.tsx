@@ -46,6 +46,7 @@ export default function RealEstatePage() {
         const q = query(
             collection(db, "properties"), 
             where("approved", "==", true),
+            orderBy("approved"),
             orderBy("createdAt", "desc")
         );
         const querySnapshot = await getDocs(q);
@@ -65,7 +66,7 @@ export default function RealEstatePage() {
         toast({
             variant: "destructive",
             title: "Failed to load properties",
-            description: "Could not fetch data from the database.",
+            description: "Could not fetch data from the database. Please ensure the required Firestore index is created.",
         });
       } finally {
         setIsLoading(false);
@@ -260,5 +261,3 @@ export default function RealEstatePage() {
     </div>
   );
 }
-
-    
