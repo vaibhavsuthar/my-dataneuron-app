@@ -37,7 +37,7 @@ const propertyFormSchema = z.object({
     .refine((files) => files?.length <= 3, "You can upload a maximum of 3 photos.")
     .refine(
         (files) => {
-            if (!files || files.length === 0) return true; // Allow empty files to pass here, other rules will catch it
+            if (!files || files.length === 0) return true;
             return Array.from(files).every((file: any) => ACCEPTED_IMAGE_TYPES.includes(file.type));
         },
         "Only .jpg and .jpeg formats are supported."
@@ -135,7 +135,7 @@ export default function AddPropertyPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Property Type</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isSubmitting}>
                            <div className="relative">
                             <Home className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
@@ -161,7 +161,7 @@ export default function AddPropertyPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Listing For</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isSubmitting}>
                            <div className="relative">
                             <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
@@ -190,7 +190,7 @@ export default function AddPropertyPage() {
                             <div className="relative">
                             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input placeholder="e.g., Ahmedabad" {...field} />
+                                <Input placeholder="e.g., Ahmedabad" {...field} disabled={isSubmitting}/>
                             </FormControl>
                             </div>
                             <FormMessage />
@@ -206,7 +206,7 @@ export default function AddPropertyPage() {
                             <div className="relative">
                             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input placeholder="e.g., Satellite" {...field} />
+                                <Input placeholder="e.g., Satellite" {...field} disabled={isSubmitting}/>
                             </FormControl>
                             </div>
                             <FormMessage />
@@ -224,7 +224,7 @@ export default function AddPropertyPage() {
                             <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground">₹</span>
                             <FormControl>
-                                <Input type="number" placeholder="e.g., 5000000" {...field} className="pl-10" />
+                                <Input type="number" placeholder="e.g., 5000000" {...field} className="pl-10" disabled={isSubmitting}/>
                             </FormControl>
                             </div>
                             <FormMessage />
@@ -240,7 +240,7 @@ export default function AddPropertyPage() {
                             <div className="relative">
                             <Maximize className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input type="number" placeholder="e.g., 1200" {...field} className="pl-10" />
+                                <Input type="number" placeholder="e.g., 1200" {...field} className="pl-10" disabled={isSubmitting}/>
                             </FormControl>
                             </div>
                             <FormMessage />
@@ -257,7 +257,7 @@ export default function AddPropertyPage() {
                         <div className="relative">
                             <MessageSquare className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                            <Textarea placeholder="Describe your property in detail..." {...field} className="pl-10 min-h-[120px]" />
+                            <Textarea placeholder="Describe your property in detail..." {...field} className="pl-10 min-h-[120px]" disabled={isSubmitting}/>
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -334,3 +334,4 @@ export default function AddPropertyPage() {
     </div>
   );
 }
+
