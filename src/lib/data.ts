@@ -180,13 +180,6 @@ export const services: Service[] = [
     icon: BrainCircuit,
     description: 'Integrating AI tools and providing expert consulting for your business.',
   },
-  {
-    title: 'Real Estate Platform',
-    slug: '/real-estate',
-    icon: Building,
-    description: 'Specialized digital services for the real estate sector.',
-    isExternal: true,
-  },
 ];
 
 interface Project {
