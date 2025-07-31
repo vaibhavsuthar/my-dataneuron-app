@@ -24,6 +24,18 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
         {/* Calendly widget styles */}
         <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-0Y8WKBT93C"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-0Y8WKBT93C');
+            `,
+          }}
+        />
       </head>
       <body className="font-body bg-background text-foreground antialiased">
           <Header />
